@@ -1,0 +1,77 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Regenerate photo manifest
+        run: |
+          python3 - <<'EOF'
+          import os, json
+          base = 'file/photo'
+          exts = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
+          result = []
+          for folder in sorted(os.listdir(base)):
+              path = os.path.join(base, folder)
+              if not os.path.isdir(path):
+                  continue
+              files = sorted(f for f in os.listdir(path) if os.path.splitext(f)[1].lower() in exts)
+              result.append({'folder': folder, 'files': files})
+          with open('data/photo_manifest.json', 'w') as f:
+              json.dump(result, f, indent=2)
+          EOF
+
+      - name: Regenerate pet manifest
+        run: |
+          python3 - <<'EOF'
+          import os, json
+          base = 'file/pet'
+          exts = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
+          result = []
+          for folder in sorted(os.listdir(base)):
+              path = os.path.join(base, folder)
+              if not os.path.isdir(path):
+                  continue
+              files = sorted(f for f in os.listdir(path) if os.path.splitext(f)[1].lower() in exts)
+              result.append({'folder': folder, 'files': files})
+          with open('data/pet_manifest.json', 'w') as f:
+              json.dump(result, f, indent=2)
+          EOF
+
+      - name: Stamp version into CSS/JS references
+        run: |
+          SHA=$(git rev-parse --short HEAD)
+          sed -i "s|style\.css?v=[^\"]*|style.css?v=${SHA}|g" *.html
+          sed -i "s|utils\.js?v=[^\"]*|utils.js?v=${SHA}|g" *.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

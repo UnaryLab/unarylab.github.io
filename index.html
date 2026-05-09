@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unary Lab</title>
+  <meta name="description" content="Unary Lab — Di Wu, Assistant Professor at UCF ECE">
+  <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css?v=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<main>
+  <div class="container">
+
+    <section class="profile" id="profile-section">
+
+      <!-- Left column: photo, name/phonetic, social links -->
+      <div class="profile-photo">
+        <img id="profile-photo" src="file/headshot/Di Wu.jpg" alt="Di Wu">
+        <div class="profile-id">
+          <h1 id="profile-name">Di Wu</h1>
+        </div>
+        <div class="social-links" id="social-links"></div>
+      </div>
+
+      <!-- Right column: bio, normy -->
+      <div class="profile-info">
+        <div class="bio" id="profile-bio"></div>
+
+        <!-- Normy carousel — right under bio -->
+        <div class="normy-section" id="normy-section" style="display:none">
+          <p class="normy-caption" id="normy-caption">I love my cat Normy.</p>
+          <div class="normy-carousel" id="normy-carousel">
+            <div class="normy-track" id="normy-track"></div>
+          </div>
+          <div class="normy-dots" id="normy-dots"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="js/utils.js?v=1"></script>
+<script>
+const VISIBLE = 3;   /* images shown at once */
+
+/* ── Probe pet images sequentially, trying .jpg then .JPG ── */
+function probeNormyImages(folder, max) {
+  return new Promise(resolve => {
+    const found = [];
+    let i = 1;
+    function tryExt(exts) {
+      if (exts.length === 0) { resolve(found); return; }
+      const [ext, ...rest] = exts;
+      const src = `${folder}/normy${i}.${ext}`;
+      const img = new Image();
+      img.onload  = () => { found.push(src); i++; tryNext(); };
+      img.onerror = () => tryExt(rest);
+      img.src = encodeURI(src);
+    }
+    function tryNext() {
+      if (i > max) { resolve(found); return; }
+      tryExt(['jpg', 'JPG']);
+    }
+    tryNext();
+  });
+}
+
+/* ── Carousel state ── */
+let nIdx = 0, nSlides = 0, nTimer = null, nItemWidth = 0;
+
+function goToSlide(i) {
+  nIdx = ((i % nSlides) + nSlides) % nSlides;
+  document.getElementById('normy-track').style.transform =
+    `translateX(-${nIdx * nItemWidth}px)`;
+  document.querySelectorAll('.normy-dot')
+    .forEach((d, j) => d.classList.toggle('active', j === nIdx));
+}
+
+function applyWidths() {
+  const carousel = document.getElementById('normy-carousel');
+  nItemWidth = carousel.offsetWidth / VISIBLE;
+  document.querySelectorAll('#normy-track img').forEach(img => {
+    img.style.width  = `${nItemWidth}px`;
+    img.style.height = '150px';
+  });
+  /* reposition without animation on resize */
+  const track = document.getElementById('normy-track');
+  track.style.transition = 'none';
+  track.style.transform  = `translateX(-${nIdx * nItemWidth}px)`;
+  requestAnimationFrame(() => { track.style.transition = 'transform 0.5s ease'; });
+}
+
+function buildCarousel(images) {
+  if (images.length === 0) return;
+
+  /* valid starting positions: last 3 images stay in frame */
+  nSlides = Math.max(1, images.length - VISIBLE + 1);
+
+  const track = document.getElementById('normy-track');
+  track.innerHTML = images
+    .map(src => `<img src="${esc(src)}" alt="Normy" loading="lazy" style="flex-shrink:0;object-fit:contain;cursor:zoom-in;">`)
+    .join('');
+
+  /* open lightbox on image click */
+  track.querySelectorAll('img').forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (window.openLightbox) window.openLightbox(img.src);
+    });
+  });
+
+  /* dots — one per slide position */
+  const dots = document.getElementById('normy-dots');
+  dots.innerHTML = Array.from({ length: nSlides }, (_, i) =>
+    `<button class="normy-dot${i === 0 ? ' active' : ''}" aria-label="Slide ${i + 1}"></button>`
+  ).join('');
+  dots.querySelectorAll('.normy-dot').forEach((btn, i) =>
+    btn.addEventListener('click', () => { clearInterval(nTimer); goToSlide(i); startTimer(); })
+  );
+
+  document.getElementById('normy-carousel').addEventListener('click', () => {
+    clearInterval(nTimer); goToSlide(nIdx + 1); startTimer();
+  });
+
+  /* Show section first so offsetWidth is non-zero, then measure after reflow */
+  document.getElementById('normy-section').style.display = '';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    applyWidths();
+    new ResizeObserver(applyWidths).observe(document.getElementById('normy-carousel'));
+    startTimer();
+  }));
+}
+
+function startTimer() {
+  nTimer = setInterval(() => goToSlide(nIdx + 1), 4000);
+}
+
+/* ── Page init ── */
+document.addEventListener('DOMContentLoaded', async () => {
+
+  /* Profile */
+  try {
+    const p = await loadJSON('data/profile.json');
+    document.title = `Unary Lab — ${p.name}`;
+    document.getElementById('profile-name').innerHTML =
+      `${esc(p.name)}${p.phonetic ? ` <span class="phonetic">${esc(p.phonetic)}</span>` : ''}`;
+    if (p.photo) document.getElementById('profile-photo').src = p.photo;
+    document.getElementById('profile-photo').alt = p.name || 'Di Wu';
+
+    const bioHtml = (Array.isArray(p.bio) ? p.bio : [p.bio])
+      .filter(Boolean).map(t => `<p>${esc(t)}</p>`).join('');
+    document.getElementById('profile-bio').innerHTML = bioHtml;
+
+    if (p.normy_caption)
+      document.getElementById('normy-caption').textContent = p.normy_caption;
+
+    const socials = [
+      p.scholar  && `<a href="${esc(p.scholar)}"  target="_blank" rel="noopener"><i class="fas fa-graduation-cap"></i><span>Google Scholar</span></a>`,
+      p.github   && `<a href="${esc(p.github)}"   target="_blank" rel="noopener"><i class="fab fa-github"></i><span>GitHub</span></a>`,
+      p.linkedin && `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i><span>LinkedIn</span></a>`,
+      p.email    && `<a href="mailto:${esc(p.email)}"><i class="fas fa-envelope"></i><span>Email</span></a>`,
+      p.dblp     && `<a href="${esc(p.dblp)}"     target="_blank" rel="noopener"><i class="fas fa-database"></i><span>DBLP</span></a>`,
+      p.cv       && `<a href="${esc(p.cv)}"        target="_blank" rel="noopener"><i class="fas fa-file-alt"></i><span>CV</span></a>`,
+    ].filter(Boolean).join('');
+    document.getElementById('social-links').innerHTML = socials;
+  } catch (e) { console.warn('profile.json', e); }
+
+  /* Normy — auto-detect images */
+  const images = await probeNormyImages('file/pet/normy-Di Wu', 50);
+  if (images.length > 0) buildCarousel(images);
+});
+</script>
+</body>
+</html>

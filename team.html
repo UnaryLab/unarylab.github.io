@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team — Unary Lab</title>
+  <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css?v=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<main>
+  <div class="container">
+    <h1 class="page-title">Team</h1>
+    <div id="team-content">
+      <p style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</p>
+    </div>
+  </div>
+</main>
+
+<script src="js/utils.js?v=1"></script>
+<script>
+function isCurrent(m) { return !m.leave || m.leave.trim() === ''; }
+
+async function probeHeadshot(name) {
+  const base = name.replace(/\s*\(.*?\)\s*/g, '').trim();
+  for (const ext of ['jpg', 'png', 'jpeg', 'webp']) {
+    const url = `file/headshot/${encodeURIComponent(base)}.${ext}`;
+    try {
+      const r = await fetch(url, { method: 'HEAD' });
+      if (r.ok) return url;
+    } catch {}
+  }
+  return null;
+}
+
+function renderMemberCard(m) {
+  const nameEl = m.link
+    ? `<a href="${esc(m.link)}" target="_blank" rel="noopener">${esc(m.title)}</a>`
+    : esc(m.title);
+  const photo = m._headshot
+    ? `<img src="${esc(m._headshot)}" alt="${esc(m.title)}" loading="lazy">`
+    : `<div class="member-avatar"><i class="fas fa-user"></i></div>`;
+  const extras = [
+    m.credit     && `<span class="credit">${esc(m.credit)}</span>`,
+    m.internship && `Intern: ${esc(m.internship)}`,
+  ].filter(Boolean).join(' · ');
+
+  return `
+    <div class="team-card">
+      ${photo}
+      <div class="member-name">${nameEl}</div>
+      <div class="member-degree">${esc(m.degree)}${m.join ? ` · ${esc(m.join)}` : ''}</div>
+      ${extras ? `<div class="member-info">${extras}</div>` : ''}
+    </div>`;
+}
+
+function renderAlumniItem(m) {
+  const nameEl = m.link
+    ? `<a href="${esc(m.link)}" target="_blank" rel="noopener">${esc(m.title)}</a>`
+    : esc(m.title);
+  const tenure = [m.join, m.leave].filter(Boolean).join('–');
+  const parts = [
+    tenure       && esc(tenure),
+    m.degree     && esc(m.degree),
+    m.internship && `Intern: ${esc(m.internship)}`,
+    m.credit     && `<span class="credit">${esc(m.credit)}</span>`,
+  ].filter(Boolean);
+  const employmentEl = m.employment
+    ? `<span class="alumni-employment">${esc(m.employment)}</span>` : '';
+
+  return `
+    <li class="alumni-item">
+      <span><span class="alumni-name">${nameEl}</span>${parts.length ? ` — ${parts.join(' · ')}` : ''}</span>
+      ${employmentEl}
+    </li>`;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const rawMembers = await loadCSV('data/team.csv');
+    const members = await Promise.all(rawMembers.map(async m => ({
+      ...m,
+      _headshot: await probeHeadshot(m.title),
+    })));
+
+    const current = members.filter(isCurrent);
+    const alumni  = members.filter(m => !isCurrent(m))
+      .sort((a, b) => parseInt(b.leave, 10) - parseInt(a.leave, 10));
+
+    const byJoin = (a, b) => parseInt(a.join, 10) - parseInt(b.join, 10);
+    const phd  = current.filter(m => (m.degree || '').toUpperCase().startsWith('PHD')).sort(byJoin);
+    const msbs = current.filter(m => ['MS','BS'].includes((m.degree || '').toUpperCase())).sort(byJoin);
+
+    let html = '';
+
+    if (phd.length > 0) {
+      html += `<div class="team-section">
+        <div class="team-section-title">Current PhD Students</div>
+        <div class="team-grid">${phd.map(renderMemberCard).join('')}</div>
+      </div>`;
+    }
+
+    if (msbs.length > 0) {
+      html += `<div class="team-section">
+        <div class="team-section-title">Current MS and BS Students</div>
+        <div class="team-grid">${msbs.map(renderMemberCard).join('')}</div>
+      </div>`;
+    }
+
+    if (alumni.length > 0) {
+      html += `<div class="team-section">
+        <div class="team-section-title">Alumni</div>
+        <ul class="alumni-list">${alumni.map(renderAlumniItem).join('')}</ul>
+      </div>`;
+    }
+
+    if (html === '') {
+      html = '<p style="color:#9ca3af;font-size:14px;padding:10px 0">No team members listed yet.</p>';
+    }
+
+    document.getElementById('team-content').innerHTML = html;
+  } catch (e) {
+    document.getElementById('team-content').innerHTML =
+      '<p style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load team data.</p>';
+    console.error(e);
+  }
+});
+</script>
+</body>
+</html>

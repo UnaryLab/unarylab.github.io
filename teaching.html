@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teaching — Unary Lab</title>
+  <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css?v=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<main>
+  <div class="container">
+    <h1 class="page-title">Teaching</h1>
+
+    <p class="teaching-intro" id="leaderboard-intro"></p>
+
+    <ul class="teaching-list" id="teaching-list">
+      <li style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</li>
+    </ul>
+  </div>
+</main>
+
+<script src="js/utils.js?v=1"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const [courses, boards] = await Promise.all([
+      loadCSV('data/teaching.csv'),
+      loadCSV('data/leaderboard.csv'),
+    ]);
+
+    const introEl = document.getElementById('leaderboard-intro');
+    introEl.innerHTML = boards.map(b =>
+      `<a href="${esc(b.url)}" target="_blank" rel="noopener">${esc(b.title)}</a>`
+    ).join('<br>');
+    const el = document.getElementById('teaching-list');
+    if (courses.length === 0) {
+      el.innerHTML = '<li style="color:#9ca3af;font-size:14px;padding:10px 0">No courses listed yet.</li>';
+      return;
+    }
+    const sorted = sortDescByDate(courses);
+    el.innerHTML = sorted.map(c => {
+      const d = parseNewsDate(c.date);
+      const semYear = [c.semester, d ? d.getFullYear() : ''].filter(Boolean).join(' ');
+      const meta = [semYear, c.role].filter(Boolean).join(' — ');
+      return `
+      <li class="teaching-item">
+        <div class="teaching-course">${esc(c.title)}</div>
+        <div class="teaching-detail">${esc(meta)}</div>
+      </li>`;
+    }).join('');
+  } catch (e) {
+    document.getElementById('teaching-list').innerHTML =
+      '<li style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load teaching data.</li>';
+    console.error(e);
+  }
+});
+</script>
+</body>
+</html>

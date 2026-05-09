@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publication — Unary Lab</title>
+  <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css?v=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<main>
+  <div class="container">
+    <div class="pub-tab-bar">
+      <button class="pub-tab active" data-tab="selected">Selected Publications</button>
+      <button class="pub-tab" data-tab="full">Full Publications</button>
+    </div>
+    <div id="pub-content">
+      <p style="color:#aaa;font-size:14px;padding:10px 0">Loading…</p>
+    </div>
+  </div>
+</main>
+
+<script src="js/utils.js?v=1"></script>
+<script>
+async function resolveLinks(pub) {
+  const field = (pub['paper/slide/poster'] || '').trim();
+  if (!field) return { _paper: null, _slide: null, _poster: null };
+
+  if (/^https?:\/\//.test(field)) {
+    return { _paper: field, _slide: null, _poster: null };
+  }
+
+  const base = `file/publication/${field}`;
+  const [paper, slidePdf, slidePptx, poster] = await Promise.all([
+    probeFile(`${base}-paper.pdf`),
+    probeFile(`${base}-slide.pdf`),
+    probeFile(`${base}-slide.pptx`),
+    probeFile(`${base}-poster.pdf`),
+  ]);
+
+  return { _paper: paper, _slide: slidePdf || slidePptx, _poster: poster };
+}
+
+function groupByYear(pubs) {
+  const map = {};
+  pubs.forEach(p => {
+    const d = parseNewsDate(p.date);
+    const yr = d ? d.getFullYear().toString() : 'Unknown';
+    (map[yr] = map[yr] || []).push(p);
+  });
+  return map;
+}
+
+function renderGrouped(pubs) {
+  if (pubs.length === 0) return '<p style="color:#aaa;font-size:14px;padding:10px 0">No publications.</p>';
+  const grouped = groupByYear(sortDescByDate(pubs));
+  const years = Object.keys(grouped).sort((a, b) => b - a);
+  return years.map(yr => `
+    <div class="year-header">${esc(yr)}</div>
+    <ul class="pub-list">${grouped[yr].map(renderPubItem).join('')}</ul>
+  `).join('');
+}
+
+let allPubs = [], selectedPubs = [];
+
+function showTab(tab) {
+  document.querySelectorAll('.pub-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('pub-content').innerHTML =
+    renderGrouped(tab === 'selected' ? selectedPubs : allPubs);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  document.querySelectorAll('.pub-tab').forEach(btn =>
+    btn.addEventListener('click', () => showTab(btn.dataset.tab))
+  );
+
+  try {
+    const rawPubs = await loadCSV('data/publication.csv');
+    allPubs = await Promise.all(rawPubs.map(async p => {
+      const links = await resolveLinks(p);
+      return { ...p, ...links };
+    }));
+    selectedPubs = allPubs.filter(p =>
+      ['1','true','yes'].includes((p.selected || '').toLowerCase().trim())
+    );
+    showTab('selected');
+  } catch (e) {
+    document.getElementById('pub-content').innerHTML =
+      '<p style="color:#aaa;font-size:14px;padding:10px 0">Could not load publications.</p>';
+    console.error(e);
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News — Unary Lab</title>
+  <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css?v=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<main>
+  <div class="container">
+    <h1 class="page-title">News</h1>
+    <ul class="news-list" id="news-list">
+      <li style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</li>
+    </ul>
+  </div>
+</main>
+
+<script src="js/utils.js?v=1"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const news = sortNewsByDate((await loadCSV('data/news.csv')).filter(n => n.date && n.date.trim()));
+    const el = document.getElementById('news-list');
+    if (news.length === 0) {
+      el.innerHTML = '<li style="color:#aaa;font-size:14px;padding:8px 0">No news yet.</li>';
+    } else {
+      el.innerHTML = news.map(renderNewsItem).join('');
+    }
+  } catch (e) {
+    document.getElementById('news-list').innerHTML =
+      '<li style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load news.</li>';
+    console.error(e);
+  }
+});
+</script>
+</body>
+</html>

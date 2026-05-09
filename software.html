@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Software — Unary Lab</title>
+  <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css?v=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<main>
+  <div class="container">
+    <h1 class="page-title">Software</h1>
+    <ul class="software-list" id="software-list">
+      <li style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</li>
+    </ul>
+  </div>
+</main>
+
+<script src="js/utils.js?v=1"></script>
+<script>
+async function resolvePaper(pub) {
+  const field = (pub['paper/slide/poster'] || '').trim();
+  if (!field) return null;
+  if (/^https?:\/\//.test(field)) return field;
+  return probeFile(`file/publication/${field}-paper.pdf`);
+}
+
+function renderSoftwareItem(p) {
+  const dateDisplay = formatNewsDate(p.date);
+  const links = [
+    p._paper && `[<a href="${esc(p._paper)}" target="_blank" rel="noopener">paper</a>]`,
+    p.code   && `[<a href="${esc(p.code)}"   target="_blank" rel="noopener">code</a>]`,
+  ].filter(Boolean).join(' ');
+  const awards = [p.award1, p.award2, p.award3]
+    .filter(Boolean)
+    .map(a => `<div class="pub-award">🏅 ${esc(a)}</div>`)
+    .join('');
+
+  return `
+    <li class="software-item">
+      <div class="software-thumb">
+        <iframe src="file/software/${esc(p.software)}.pdf#toolbar=0&navpanes=0" title="${esc(p.software)}"
+                scrolling="no" class="software-thumb-pdf"></iframe>
+      </div>
+      <div class="software-info">
+        <div class="software-name">${esc(p.software)}</div>
+        <div class="software-venue"><em>${esc(p.venue)}</em>${dateDisplay ? `, ${dateDisplay}` : ''}</div>
+        <div class="software-desc">${esc(p.description)}</div>
+        ${links ? `<div class="pub-links">${links}</div>` : ''}
+        ${awards}
+      </div>
+    </li>`;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const rawPubs = await loadCSV('data/publication.csv');
+    const filtered = rawPubs.filter(p =>
+      p.software && p.software.trim() && p.description && p.description.trim()
+    );
+    const software = sortDescByDate(await Promise.all(filtered.map(async p => ({
+      ...p,
+      _paper: await resolvePaper(p),
+    }))));
+
+    const el = document.getElementById('software-list');
+    if (software.length === 0) {
+      el.innerHTML = '<li style="color:#9ca3af;font-size:14px;padding:10px 0">No software listed yet.</li>';
+    } else {
+      el.innerHTML = software.map(renderSoftwareItem).join('');
+      el.querySelectorAll('.software-thumb').forEach(thumb => {
+        thumb.style.cursor = 'zoom-in';
+        const iframe = thumb.querySelector('iframe');
+        thumb.addEventListener('click', () => {
+          if (window.openLightbox) window.openLightbox(iframe.src);
+        });
+      });
+    }
+  } catch (e) {
+    document.getElementById('software-list').innerHTML =
+      '<li style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load software data.</li>';
+    console.error(e);
+  }
+});
+</script>
+</body>
+</html>
