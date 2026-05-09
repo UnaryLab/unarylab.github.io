@@ -156,10 +156,20 @@ function formatNewsDate(str) {
 }
 
 async function probeFile(url) {
-  try {
-    const r = await fetch(url, { method: 'HEAD', cache: 'no-store' });
-    return r.ok ? url : null;
-  } catch { return null; }
+  for (const u of _caseVariants(url)) {
+    try {
+      const r = await fetch(u, { method: 'HEAD', cache: 'no-store' });
+      if (r.ok) return u;
+    } catch {}
+  }
+  return null;
+}
+function _caseVariants(url) {
+  const dot = url.lastIndexOf('.');
+  if (dot === -1) return [url];
+  const base = url.slice(0, dot + 1), ext = url.slice(dot + 1);
+  const lo = ext.toLowerCase(), hi = ext.toUpperCase();
+  return lo === hi ? [url] : [base + lo, base + hi];
 }
 
 function sortDescByDate(arr) {

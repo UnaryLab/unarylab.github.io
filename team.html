@@ -27,7 +27,7 @@ function isCurrent(m) { return !m.leave || m.leave.trim() === ''; }
 
 async function probeHeadshot(name) {
   const base = name.replace(/\s*\(.*?\)\s*/g, '').trim();
-  for (const ext of ['jpg', 'png', 'jpeg', 'webp']) {
+  for (const ext of ['jpg', 'jpeg', 'png', 'webp', 'heic']) {
     const url = `file/headshot/${encodeURIComponent(base)}.${ext}`;
     if (await probeFile(url)) return url;
   }
