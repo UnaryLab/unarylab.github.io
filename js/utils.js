@@ -2,6 +2,12 @@
    Unary Lab — Shared Utilities
    ============================================================ */
 
+const _v = (() => {
+  const s = document.querySelector('script[src*="utils.js"]');
+  const m = s && s.src.match(/[?&]v=([^&]+)/);
+  return m ? m[1] : Date.now();
+})();
+
 /* ── CSV Parser ─────────────────────────────────────── */
 function parseCSV(text) {
   const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim().split('\n');
@@ -38,13 +44,13 @@ function splitLine(line) {
 }
 
 async function loadCSV(path) {
-  const resp = await fetch(`${path}?t=${Date.now()}`);
+  const resp = await fetch(`${path}?v=${_v}`);
   if (!resp.ok) throw new Error(`Failed to load ${path}: HTTP ${resp.status}`);
   return parseCSV(await resp.text());
 }
 
 async function loadJSON(path) {
-  const resp = await fetch(`${path}?t=${Date.now()}`);
+  const resp = await fetch(`${path}?v=${_v}`);
   if (!resp.ok) throw new Error(`Failed to load ${path}: HTTP ${resp.status}`);
   return resp.json();
 }
