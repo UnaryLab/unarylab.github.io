@@ -163,7 +163,7 @@ function sortDescByDate(arr) {
 function renderNewsItem(n) {
   const dateDisplay = formatNewsDate(n.date);
   const dateEl = dateDisplay ? `<span class="news-date">[${dateDisplay}]</span> ` : '';
-  const linkEl = n.link ? ` [<a href="${esc(n.link)}" target="_blank" rel="noopener">link</a>]` : '';
+  const linkEl = n.link ? ` <a href="${esc(n.link)}" target="_blank" rel="noopener">[link]</a>` : '';
   return `<li class="news-item">${dateEl}${esc(n.title)}${linkEl}</li>`;
 }
 
