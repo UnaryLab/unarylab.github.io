@@ -2,19 +2,6 @@
    Unary Lab — Shared Utilities
    ============================================================ */
 
-/* Bust sessionStorage data cache when the deployed version changes */
-(function () {
-  const s = document.querySelector('script[src*="utils.js"]');
-  const m = s && s.src.match(/[?&]v=([^&]+)/);
-  const v = m ? m[1] : null;
-  if (v && sessionStorage.getItem('_v') !== v) {
-    Object.keys(sessionStorage)
-      .filter(k => k.startsWith('_c:') || k.startsWith('_j:'))
-      .forEach(k => sessionStorage.removeItem(k));
-    sessionStorage.setItem('_v', v);
-  }
-})();
-
 /* ── CSV Parser ─────────────────────────────────────── */
 function parseCSV(text) {
   const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim().split('\n');
@@ -51,25 +38,15 @@ function splitLine(line) {
 }
 
 async function loadCSV(path) {
-  const key = `_c:${path}`;
-  const hit = sessionStorage.getItem(key);
-  if (hit !== null) return parseCSV(hit);
   const resp = await fetch(`${path}?t=${Date.now()}`);
   if (!resp.ok) throw new Error(`Failed to load ${path}: HTTP ${resp.status}`);
-  const text = await resp.text();
-  try { sessionStorage.setItem(key, text); } catch {}
-  return parseCSV(text);
+  return parseCSV(await resp.text());
 }
 
 async function loadJSON(path) {
-  const key = `_j:${path}`;
-  const hit = sessionStorage.getItem(key);
-  if (hit !== null) return JSON.parse(hit);
   const resp = await fetch(`${path}?t=${Date.now()}`);
   if (!resp.ok) throw new Error(`Failed to load ${path}: HTTP ${resp.status}`);
-  const text = await resp.text();
-  try { sessionStorage.setItem(key, text); } catch {}
-  return JSON.parse(text);
+  return resp.json();
 }
 
 /* ── HTML escape ────────────────────────────────────── */
