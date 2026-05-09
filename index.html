@@ -59,7 +59,7 @@ function probeNormyImages(folder, max) {
       const img = new Image();
       img.onload  = () => { found.push(src); i++; tryNext(); };
       img.onerror = () => tryExt(rest);
-      img.src = encodeURI(src);
+      img.src = encodeURI(src) + `?t=${Date.now()}`;
     }
     function tryNext() {
       if (i > max) { resolve(found); return; }

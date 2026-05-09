@@ -29,10 +29,7 @@ async function probeHeadshot(name) {
   const base = name.replace(/\s*\(.*?\)\s*/g, '').trim();
   for (const ext of ['jpg', 'png', 'jpeg', 'webp']) {
     const url = `file/headshot/${encodeURIComponent(base)}.${ext}`;
-    try {
-      const r = await fetch(url, { method: 'HEAD' });
-      if (r.ok) return url;
-    } catch {}
+    if (await probeFile(url)) return url;
   }
   return null;
 }

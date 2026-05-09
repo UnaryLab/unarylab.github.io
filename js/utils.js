@@ -2,6 +2,19 @@
    Unary Lab — Shared Utilities
    ============================================================ */
 
+/* Bust sessionStorage data cache when the deployed version changes */
+(function () {
+  const s = document.querySelector('script[src*="utils.js"]');
+  const m = s && s.src.match(/[?&]v=([^&]+)/);
+  const v = m ? m[1] : null;
+  if (v && sessionStorage.getItem('_v') !== v) {
+    Object.keys(sessionStorage)
+      .filter(k => k.startsWith('_c:') || k.startsWith('_j:'))
+      .forEach(k => sessionStorage.removeItem(k));
+    sessionStorage.setItem('_v', v);
+  }
+})();
+
 /* ── CSV Parser ─────────────────────────────────────── */
 function parseCSV(text) {
   const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim().split('\n');
@@ -144,7 +157,7 @@ function formatNewsDate(str) {
 
 async function probeFile(url) {
   try {
-    const r = await fetch(url, { method: 'HEAD' });
+    const r = await fetch(url, { method: 'HEAD', cache: 'no-store' });
     return r.ok ? url : null;
   } catch { return null; }
 }
