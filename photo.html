@@ -58,7 +58,12 @@ function renderEventsTab(entries) {
 function renderHealingTab(petManifest) {
   if (petManifest.length === 0)
     return '<p style="color:#9ca3af;font-size:14px;padding:10px 0">No pets yet.</p>';
-  return petManifest.map(entry => {
+  const sorted = [...petManifest].sort((a, b) => {
+    const na = a.folder.split('-')[0].toLowerCase();
+    const nb = b.folder.split('-')[0].toLowerCase();
+    return na.localeCompare(nb);
+  });
+  return sorted.map(entry => {
     const dashIdx = entry.folder.indexOf('-');
     const petName   = dashIdx >= 0 ? entry.folder.slice(0, dashIdx) : entry.folder;
     const ownerName = dashIdx >= 0 ? entry.folder.slice(dashIdx + 1) : '';
