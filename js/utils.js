@@ -97,9 +97,19 @@ async function injectNav() {
           <img src="${esc(logo)}" alt="Unary Lab" class="nav-logo">
           Unary Lab
         </a>
-        <div class="nav-links">${links}</div>
+        <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+        <div class="nav-links" id="nav-links">${links}</div>
       </div>
     </nav>`;
+
+  document.querySelector('.nav-toggle').addEventListener('click', () => {
+    document.getElementById('nav-links').classList.toggle('open');
+  });
+  document.querySelectorAll('#nav-links a').forEach(a =>
+    a.addEventListener('click', () =>
+      document.getElementById('nav-links').classList.remove('open')
+    )
+  );
 }
 
 /* ── News date helpers ───────────────────────────────────────────────────

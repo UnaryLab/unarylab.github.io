@@ -29,6 +29,7 @@ main { padding: 32px 0 72px; }
 nav {
   background: #B0B5AB;
   border-bottom: 1px solid #9da29a;
+  position: relative;
 }
 
 .nav-inner {
@@ -72,6 +73,17 @@ nav {
 }
 .nav-links a:hover { color: #000; background: rgba(0,0,0,0.08); text-decoration: none; }
 .nav-links a.active { font-weight: 700; color: #000; }
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #2d2d2d;
+  padding: 0 4px;
+  line-height: 1;
+}
 .nav-links a span::after {
   content: attr(data-label);
   display: block;
@@ -386,5 +398,20 @@ nav {
   .software-thumb img { width: 100%; height: auto; }
   .photo-grid img { width: calc(50% - 3px); }
   .team-grid { justify-content: center; }
-  .nav-links a { padding: 0 8px; font-size: 13px; height: 72px; }
+
+  .nav-toggle { display: block; }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: #B0B5AB;
+    border-top: 1px solid #9da29a;
+    flex-direction: column;
+    z-index: 100;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { height: auto; padding: 12px 24px; font-size: 16px; width: 100%; }
+  .nav-links a span::after { display: none; }
 }
