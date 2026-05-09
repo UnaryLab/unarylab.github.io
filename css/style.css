@@ -30,6 +30,7 @@ nav {
   background: #B0B5AB;
   border-bottom: 1px solid #9da29a;
   position: relative;
+  overflow-x: hidden;
 }
 
 .nav-inner {
@@ -59,7 +60,27 @@ nav {
 
 .nav-logo { height: 48px; width: auto; display: block; }
 
-.nav-links { display: flex; align-items: center; }
+.nav-links {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #B0B5AB;
+  border-top: 1px solid #9da29a;
+  flex-direction: column;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.nav-links.open { display: flex; }
+.nav-links a {
+  height: auto;
+  padding: 14px 24px;
+  font-size: 16px;
+  width: 100%;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.nav-links a span::after { display: none; }
 
 .nav-links a {
   padding: 0 12px;
@@ -75,14 +96,15 @@ nav {
 .nav-links a.active { font-weight: 700; color: #000; }
 
 .nav-toggle {
-  display: none;
   background: none;
   border: none;
   font-size: 24px;
   cursor: pointer;
   color: #2d2d2d;
-  padding: 0 4px;
+  padding: 0 8px;
   line-height: 1;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .nav-links a span::after {
   content: attr(data-label);
@@ -387,7 +409,7 @@ nav {
 }
 
 /* ── Responsive ──────────────────────────────────────── */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .container { padding: 0 16px; }
   .profile { flex-direction: column; }
   .profile-photo { flex: none; width: 50%; }
@@ -399,19 +421,26 @@ nav {
   .photo-grid img { width: calc(50% - 3px); }
   .team-grid { justify-content: center; }
 
-  .nav-toggle { display: block; }
+}
+
+@media (min-width: 769px) {
+  .nav-toggle { display: none; }
   .nav-links {
-    display: none;
-    position: absolute;
-    top: 72px;
-    left: 0;
-    right: 0;
-    background: #B0B5AB;
-    border-top: 1px solid #9da29a;
-    flex-direction: column;
-    z-index: 100;
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    background: none;
+    border: none;
+    box-shadow: none;
+    z-index: auto;
   }
-  .nav-links.open { display: flex; }
-  .nav-links a { height: auto; padding: 12px 24px; font-size: 16px; width: 100%; }
-  .nav-links a span::after { display: none; }
+  .nav-links a {
+    height: 72px;
+    padding: 0 12px;
+    font-size: 18px;
+    width: auto;
+    border-bottom: none;
+  }
+  .nav-links a span::after { display: block; }
 }
