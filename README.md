@@ -41,13 +41,13 @@ Edit directly. Fields: `name`, `phonetic`, `bio`, `email`, `scholar`, `github`, 
 | Software | name of software (must match `file/software/<name>.pdf`) |
 | Description | shown on Software page if Software field is set |
 
-**Paper files** go in `file/publication/` named `<prefix>-paper.pdf`, `-slide.pdf`, `-slide.pptx`, `-poster.pdf`.
+**Paper files** go in `file/publication/` named `<prefix>-paper.pdf`, `-slide.pdf`, `-slide.pptx`, `-poster.pdf` (uppercase extensions also accepted).
 
 ---
 
 ### Software — driven by `data/publication.csv`
 Rows where both `Software` and `Description` are filled appear on the Software page.  
-Thumbnail PDF goes in `file/software/<software-name>.pdf`.
+Thumbnail goes in `file/software/<software-name>.pdf` (uppercase `.PDF` also accepted).
 
 ---
 
@@ -79,7 +79,8 @@ Thumbnail PDF goes in `file/software/<software-name>.pdf`.
 | Credit | special credit text (shown in darkred) |
 | Internship | internship host (optional) |
 
-**Headshots** go in `file/headshot/<Full Name>.jpg` (or `.png`).  
+**Headshots** go in `file/headshot/<Full Name>.<ext>`.  
+Supported formats: `jpg` · `jpeg` · `png` · `webp` · `heic` (uppercase extensions also accepted).  
 Names with affiliations in parentheses (e.g. `Arya Mahesh Patil (IIT Bombay)`) are matched by stripping the parenthetical.
 
 ---
@@ -94,6 +95,8 @@ Names with affiliations in parentheses (e.g. `Arya Mahesh Patil (IIT Bombay)`) a
 2. Create a folder under `file/photo/` named `YYYYMMDD-<slug>` (e.g. `20260503-gathering`).
 3. Drop image files into that folder.
 
+Supported formats: `jpg` · `jpeg` · `png` · `gif` · `webp` · `heic` (uppercase extensions also accepted).
+
 The photo manifest (`data/photo_manifest.json`) is **auto-generated** on every deploy — no manual update needed.
 
 ### Photo — Healing the Day tab — `file/pet/`
@@ -101,7 +104,9 @@ Folder naming convention: `<pet-name>-<Owner Name>` (e.g. `normy-Di Wu`).
 The pet name and owner name are parsed from the folder name automatically.
 
 1. Create a folder under `file/pet/` named `<pet-name>-<Owner Name>`.
-2. Drop image files (`.jpg`, `.jpeg`, `.png`) into that folder.
+2. Drop image files into that folder.
+
+Supported formats: `jpg` · `jpeg` · `png` · `gif` · `webp` · `heic` (uppercase extensions also accepted).
 
 The pet manifest (`data/pet_manifest.json`) is **auto-generated** on every deploy — no manual update needed.
 
