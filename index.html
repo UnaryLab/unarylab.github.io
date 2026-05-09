@@ -19,7 +19,6 @@
 
     <section class="profile" id="profile-section">
 
-      <!-- Left column: photo, name/phonetic, social links -->
       <div class="profile-photo">
         <img id="profile-photo" src="file/headshot/Di Wu.jpg" alt="Di Wu">
         <div class="profile-id">
@@ -28,11 +27,9 @@
         <div class="social-links" id="social-links"></div>
       </div>
 
-      <!-- Right column: bio, normy -->
       <div class="profile-info">
         <div class="bio" id="profile-bio"></div>
 
-        <!-- Normy carousel — right under bio -->
         <div class="normy-section" id="normy-section" style="display:none">
           <p class="normy-caption" id="normy-caption">I love my cat Normy.</p>
           <div class="normy-carousel" id="normy-carousel">
@@ -51,7 +48,6 @@
 <script>
 const VISIBLE = 3;   /* images shown at once */
 
-/* ── Probe pet images sequentially, trying .jpg then .JPG ── */
 function probeNormyImages(folder, max) {
   return new Promise(resolve => {
     const found = [];
@@ -73,7 +69,6 @@ function probeNormyImages(folder, max) {
   });
 }
 
-/* ── Carousel state ── */
 let nIdx = 0, nSlides = 0, nTimer = null, nItemWidth = 0;
 
 function goToSlide(i) {
@@ -106,7 +101,7 @@ function buildCarousel(images) {
 
   const track = document.getElementById('normy-track');
   track.innerHTML = images
-    .map(src => `<img src="${esc(src)}" alt="Normy" loading="lazy" style="flex-shrink:0;object-fit:contain;cursor:zoom-in;">`)
+    .map(src => `<img src="${encodeURI(src)}" alt="Normy" loading="lazy" style="flex-shrink:0;object-fit:contain;cursor:zoom-in;">`)
     .join('');
 
   /* open lightbox on image click */
@@ -143,10 +138,7 @@ function startTimer() {
   nTimer = setInterval(() => goToSlide(nIdx + 1), 4000);
 }
 
-/* ── Page init ── */
 document.addEventListener('DOMContentLoaded', async () => {
-
-  /* Profile */
   try {
     const p = await loadJSON('data/profile.json');
     document.title = `Unary Lab — ${p.name}`;
@@ -173,7 +165,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('social-links').innerHTML = socials;
   } catch (e) { console.warn('profile.json', e); }
 
-  /* Normy — auto-detect images */
   const images = await probeNormyImages('file/pet/normy-Di Wu', 50);
   if (images.length > 0) buildCarousel(images);
 });

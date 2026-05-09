@@ -15,13 +15,9 @@
 
 <main>
   <div class="container">
-    <h1 class="page-title">Teaching</h1>
-
-    <p class="teaching-intro" id="leaderboard-intro"></p>
-
-    <ul class="teaching-list" id="teaching-list">
-      <li style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</li>
-    </ul>
+    <div id="teaching-root">
+      <p style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</p>
+    </div>
   </div>
 </main>
 
@@ -34,29 +30,34 @@ document.addEventListener('DOMContentLoaded', async () => {
       loadCSV('data/leaderboard.csv'),
     ]);
 
-    const introEl = document.getElementById('leaderboard-intro');
-    introEl.innerHTML = boards.map(b =>
-      `<a href="${esc(b.url)}" target="_blank" rel="noopener">${esc(b.title)}</a>`
-    ).join('<br>');
-    const el = document.getElementById('teaching-list');
+    const introHtml = boards.length
+      ? `<p class="teaching-intro">${boards.map(b =>
+          `<a href="${esc(b.url)}" target="_blank" rel="noopener">${esc(b.title)}</a>`
+        ).join('<br>')}</p>`
+      : '';
+
+    let listHtml;
     if (courses.length === 0) {
-      el.innerHTML = '<li style="color:#9ca3af;font-size:14px;padding:10px 0">No courses listed yet.</li>';
-      return;
+      listHtml = '<p style="color:#9ca3af;font-size:14px;padding:10px 0">No courses listed yet.</p>';
+    } else {
+      const sorted = sortDescByDate(courses);
+      listHtml = `<ul class="teaching-list">${sorted.map(c => {
+        const d = parseNewsDate(c.date);
+        const semYear = [c.semester, d ? d.getFullYear() : ''].filter(Boolean).join(' ');
+        const meta = [semYear, c.role].filter(Boolean).join(' — ');
+        return `
+        <li class="teaching-item">
+          <div class="teaching-course">${esc(c.title)}</div>
+          <div class="teaching-detail">${esc(meta)}</div>
+        </li>`;
+      }).join('')}</ul>`;
     }
-    const sorted = sortDescByDate(courses);
-    el.innerHTML = sorted.map(c => {
-      const d = parseNewsDate(c.date);
-      const semYear = [c.semester, d ? d.getFullYear() : ''].filter(Boolean).join(' ');
-      const meta = [semYear, c.role].filter(Boolean).join(' — ');
-      return `
-      <li class="teaching-item">
-        <div class="teaching-course">${esc(c.title)}</div>
-        <div class="teaching-detail">${esc(meta)}</div>
-      </li>`;
-    }).join('');
+
+    document.getElementById('teaching-root').innerHTML =
+      `<h1 class="page-title">Teaching</h1>${introHtml}${listHtml}`;
   } catch (e) {
-    document.getElementById('teaching-list').innerHTML =
-      '<li style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load teaching data.</li>';
+    document.getElementById('teaching-root').innerHTML =
+      '<p style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load teaching data.</p>';
     console.error(e);
   }
 });

@@ -15,8 +15,7 @@
 
 <main>
   <div class="container">
-    <h1 class="page-title">Team</h1>
-    <div id="team-content">
+    <div id="team-root">
       <p style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</p>
     </div>
   </div>
@@ -123,9 +122,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       html = '<p style="color:#9ca3af;font-size:14px;padding:10px 0">No team members listed yet.</p>';
     }
 
-    document.getElementById('team-content').innerHTML = html;
+    document.getElementById('team-root').innerHTML = `<h1 class="page-title">Team</h1>${html}`;
   } catch (e) {
-    document.getElementById('team-content').innerHTML =
+    document.getElementById('team-root').innerHTML =
       '<p style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load team data.</p>';
     console.error(e);
   }

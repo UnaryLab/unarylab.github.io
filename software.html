@@ -15,10 +15,9 @@
 
 <main>
   <div class="container">
-    <h1 class="page-title">Software</h1>
-    <ul class="software-list" id="software-list">
-      <li style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</li>
-    </ul>
+    <div id="software-root">
+      <p style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</p>
+    </div>
   </div>
 </main>
 
@@ -69,12 +68,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       _paper: await resolvePaper(p),
     }))));
 
-    const el = document.getElementById('software-list');
+    const root = document.getElementById('software-root');
     if (software.length === 0) {
-      el.innerHTML = '<li style="color:#9ca3af;font-size:14px;padding:10px 0">No software listed yet.</li>';
+      root.innerHTML = '<h1 class="page-title">Software</h1><p style="color:#9ca3af;font-size:14px;padding:10px 0">No software listed yet.</p>';
     } else {
-      el.innerHTML = software.map(renderSoftwareItem).join('');
-      el.querySelectorAll('.software-thumb').forEach(thumb => {
+      root.innerHTML = `<h1 class="page-title">Software</h1><ul class="software-list">${software.map(renderSoftwareItem).join('')}</ul>`;
+      root.querySelectorAll('.software-thumb').forEach(thumb => {
         thumb.style.cursor = 'zoom-in';
         const iframe = thumb.querySelector('iframe');
         thumb.addEventListener('click', () => {
@@ -83,8 +82,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
   } catch (e) {
-    document.getElementById('software-list').innerHTML =
-      '<li style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load software data.</li>';
+    document.getElementById('software-root').innerHTML =
+      '<p style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load software data.</p>';
     console.error(e);
   }
 });

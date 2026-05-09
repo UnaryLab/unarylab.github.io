@@ -15,10 +15,9 @@
 
 <main>
   <div class="container">
-    <h1 class="page-title">News</h1>
-    <ul class="news-list" id="news-list">
-      <li style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</li>
-    </ul>
+    <div id="news-root">
+      <p style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</p>
+    </div>
   </div>
 </main>
 
@@ -26,16 +25,16 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const news = sortNewsByDate((await loadCSV('data/news.csv')).filter(n => n.date && n.date.trim()));
-    const el = document.getElementById('news-list');
+    const news = sortDescByDate((await loadCSV('data/news.csv')).filter(n => n.date && n.date.trim()));
+    const root = document.getElementById('news-root');
     if (news.length === 0) {
-      el.innerHTML = '<li style="color:#aaa;font-size:14px;padding:8px 0">No news yet.</li>';
+      root.innerHTML = '<h1 class="page-title">News</h1><p style="color:#aaa;font-size:14px;padding:8px 0">No news yet.</p>';
     } else {
-      el.innerHTML = news.map(renderNewsItem).join('');
+      root.innerHTML = `<h1 class="page-title">News</h1><ul class="news-list">${news.map(renderNewsItem).join('')}</ul>`;
     }
   } catch (e) {
-    document.getElementById('news-list').innerHTML =
-      '<li style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load news.</li>';
+    document.getElementById('news-root').innerHTML =
+      '<p style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load news.</p>';
     console.error(e);
   }
 });

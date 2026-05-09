@@ -38,18 +38,28 @@ function splitLine(line) {
 }
 
 async function loadCSV(path) {
+  const key = `_c:${path}`;
+  const hit = sessionStorage.getItem(key);
+  if (hit !== null) return parseCSV(hit);
   const resp = await fetch(`${path}?t=${Date.now()}`);
   if (!resp.ok) throw new Error(`Failed to load ${path}: HTTP ${resp.status}`);
-  return parseCSV(await resp.text());
+  const text = await resp.text();
+  try { sessionStorage.setItem(key, text); } catch {}
+  return parseCSV(text);
 }
 
 async function loadJSON(path) {
+  const key = `_j:${path}`;
+  const hit = sessionStorage.getItem(key);
+  if (hit !== null) return JSON.parse(hit);
   const resp = await fetch(`${path}?t=${Date.now()}`);
   if (!resp.ok) throw new Error(`Failed to load ${path}: HTTP ${resp.status}`);
-  return resp.json();
+  const text = await resp.text();
+  try { sessionStorage.setItem(key, text); } catch {}
+  return JSON.parse(text);
 }
 
-/* ── HTML escape ─────────────────────────────────────── */
+/* ── HTML escape ────────────────────────────────────── */
 function esc(str) {
   if (!str) return '';
   return String(str)
@@ -134,7 +144,6 @@ function formatNewsDate(str) {
   return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}`;
 }
 
-/* Probe whether a file exists via HEAD request */
 async function probeFile(url) {
   try {
     const r = await fetch(url, { method: 'HEAD' });
@@ -142,7 +151,6 @@ async function probeFile(url) {
   } catch { return null; }
 }
 
-/* Sort newest-first; entries with no date go to the bottom */
 function sortDescByDate(arr) {
   return [...arr].sort((a, b) => {
     const da = parseNewsDate(a.date), db = parseNewsDate(b.date);
@@ -153,22 +161,7 @@ function sortDescByDate(arr) {
   });
 }
 
-/* Sort news newest-first; entries with no date go to the top */
-function sortNewsByDate(news) {
-  return [...news].sort((a, b) => {
-    const da = parseNewsDate(a.date);
-    const db = parseNewsDate(b.date);
-    if (!da && !db) return 0;
-    if (!da) return -1;
-    if (!db) return  1;
-    return db - da;
-  });
-}
-
-/* ── News item renderer ──────────────────────────────────────────────────
-   Format: [YYYY/MM] Title [link]
-   CSV columns: Title, Date, Link  (headers lowercased by parser)
-   ──────────────────────────────────────────────────────────────────────── */
+/* ── Renderers ───────────────────────────────────────── */
 function renderNewsItem(n) {
   const dateDisplay = formatNewsDate(n.date);
   const dateEl = dateDisplay ? `<span class="news-date">[${dateDisplay}]</span> ` : '';
@@ -176,10 +169,6 @@ function renderNewsItem(n) {
   return `<li class="news-item">${dateEl}${esc(n.title)}${linkEl}</li>`;
 }
 
-/* ── Publication item renderer ───────────────────────────────────────────
-   Links displayed as [paper] [code] [slides] plain bracket-style text links.
-   Matches the style on www.unarylab.com (not button pills).
-   ──────────────────────────────────────────────────────────────────────── */
 function renderPubItem(p) {
   const gem = (p.tier || '').toLowerCase().trim() === 'top' ? '💎 ' : '';
 

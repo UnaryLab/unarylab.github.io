@@ -15,11 +15,7 @@
 
 <main>
   <div class="container">
-    <div class="pub-tab-bar">
-      <button class="pub-tab active" data-tab="selected">Selected Publications</button>
-      <button class="pub-tab" data-tab="full">Full Publications</button>
-    </div>
-    <div id="pub-content">
+    <div id="pub-root">
       <p style="color:#aaa;font-size:14px;padding:10px 0">Loading…</p>
     </div>
   </div>
@@ -66,19 +62,16 @@ function renderGrouped(pubs) {
   `).join('');
 }
 
-let allPubs = [], selectedPubs = [];
+let allPubs = [], selectedPubs = [], activeTab = 'selected';
 
 function showTab(tab) {
+  activeTab = tab;
   document.querySelectorAll('.pub-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.getElementById('pub-content').innerHTML =
     renderGrouped(tab === 'selected' ? selectedPubs : allPubs);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  document.querySelectorAll('.pub-tab').forEach(btn =>
-    btn.addEventListener('click', () => showTab(btn.dataset.tab))
-  );
-
   try {
     const rawPubs = await loadCSV('data/publication.csv');
     allPubs = await Promise.all(rawPubs.map(async p => {
@@ -88,9 +81,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     selectedPubs = allPubs.filter(p =>
       ['1','true','yes'].includes((p.selected || '').toLowerCase().trim())
     );
+
+    document.getElementById('pub-root').innerHTML = `
+      <div class="pub-tab-bar">
+        <button class="pub-tab" data-tab="selected">Selected Publications</button>
+        <button class="pub-tab" data-tab="full">Full Publications</button>
+      </div>
+      <div id="pub-content"></div>`;
+
+    document.querySelectorAll('.pub-tab').forEach(btn =>
+      btn.addEventListener('click', () => showTab(btn.dataset.tab))
+    );
     showTab('selected');
   } catch (e) {
-    document.getElementById('pub-content').innerHTML =
+    document.getElementById('pub-root').innerHTML =
       '<p style="color:#aaa;font-size:14px;padding:10px 0">Could not load publications.</p>';
     console.error(e);
   }
