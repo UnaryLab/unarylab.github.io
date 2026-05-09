@@ -30,7 +30,6 @@ nav {
   background: #B0B5AB;
   border-bottom: 1px solid #9da29a;
   position: relative;
-  overflow-x: hidden;
 }
 
 .nav-inner {
@@ -74,24 +73,17 @@ nav {
 }
 .nav-links.open { display: flex; }
 .nav-links a {
-  height: auto;
   padding: 14px 24px;
   font-size: 16px;
+  color: #2d2d2d;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
   width: 100%;
   border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 .nav-links a span::after { display: none; }
-
-.nav-links a {
-  padding: 0 12px;
-  font-size: 18px;
-  color: #2d2d2d;
-  text-decoration: none;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
 .nav-links a:hover { color: #000; background: rgba(0,0,0,0.08); text-decoration: none; }
 .nav-links a.active { font-weight: 700; color: #000; }
 
@@ -101,18 +93,10 @@ nav {
   font-size: 24px;
   cursor: pointer;
   color: #2d2d2d;
-  padding: 0 8px;
+  padding: 8px;
   line-height: 1;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-}
-.nav-links a span::after {
-  content: attr(data-label);
-  display: block;
-  font-weight: 700;
-  height: 0;
-  visibility: hidden;
-  overflow: hidden;
 }
 
 /* ── Section titles ──────────────────────────────────── */
@@ -440,5 +424,12 @@ nav {
     width: auto;
     border-bottom: none;
   }
-  .nav-links a span::after { display: block; }
+  .nav-links a span::after {
+    content: attr(data-label);
+    display: block;
+    font-weight: 700;
+    height: 0;
+    visibility: hidden;
+    overflow: hidden;
+  }
 }
