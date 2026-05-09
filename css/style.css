@@ -63,8 +63,8 @@ nav {
   display: none;
   position: absolute;
   top: 100%;
-  left: 0;
   right: 0;
+  width: max-content;
   background: #B0B5AB;
   border-top: 1px solid #9da29a;
   flex-direction: column;
@@ -79,6 +79,7 @@ nav {
   text-decoration: none;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   white-space: nowrap;
   width: 100%;
   border-bottom: 1px solid rgba(0,0,0,0.08);
