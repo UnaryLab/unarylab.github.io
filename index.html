@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('social-links').innerHTML = socials;
   } catch (e) { console.warn('profile.json', e); }
 
-  const images = await probeNormyImages('file/pet/normy-Di Wu', 50);
+  const images = await probeNormyImages('file/pet/normy---Di Wu', 50);
   if (images.length > 0) buildCarousel(images);
 });
 </script>

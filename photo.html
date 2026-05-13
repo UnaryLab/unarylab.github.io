@@ -59,15 +59,15 @@ function renderHealingTab(petManifest) {
   if (petManifest.length === 0)
     return '<p style="color:#9ca3af;font-size:14px;padding:10px 0">No pets yet.</p>';
   const sorted = [...petManifest].sort((a, b) => {
-    const na = a.folder.split('-')[0].toLowerCase();
-    const nb = b.folder.split('-')[0].toLowerCase();
+    const na = a.folder.split('---')[0].toLowerCase();
+    const nb = b.folder.split('---')[0].toLowerCase();
     return na.localeCompare(nb);
   });
   return sorted.map(entry => {
-    const dashIdx = entry.folder.indexOf('-');
+    const dashIdx = entry.folder.indexOf('---');
     const petName   = dashIdx >= 0 ? entry.folder.slice(0, dashIdx) : entry.folder;
-    const ownerName = dashIdx >= 0 ? entry.folder.slice(dashIdx + 1) : '';
-    const petDisplay = petName.charAt(0).toUpperCase() + petName.slice(1);
+    const ownerName = dashIdx >= 0 ? entry.folder.slice(dashIdx + 3) : '';
+    const petDisplay = /[A-Z]/.test(petName) ? petName : petName.charAt(0).toUpperCase() + petName.slice(1);
     const images = entry.files.map(f =>
       `<img src="file/pet/${encodeURIComponent(entry.folder)}/${encodeURIComponent(f)}" alt="${esc(petDisplay)}" loading="lazy">`
     ).join('');

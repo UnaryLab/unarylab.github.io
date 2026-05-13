@@ -48,7 +48,7 @@ jobs:
           base = 'file/pet'
           exts = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.heic'}
           result = []
-          for folder in sorted(os.listdir(base), key=lambda f: f.split('-')[0].lower()):
+          for folder in sorted(os.listdir(base), key=lambda f: f.split('---')[0].lower()):
               path = os.path.join(base, folder)
               if not os.path.isdir(path):
                   continue

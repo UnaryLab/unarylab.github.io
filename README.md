@@ -12,7 +12,7 @@ Edit directly. Fields: `name`, `phonetic`, `bio`, `email`, `scholar`, `github`, 
 
 **Profile photo**: place at the path specified in `profile.json` (default: `file/headshot/Di Wu.jpg`).
 
-**Normy photos**: drop images into `file/pet/normy-Di Wu/` — all are picked up automatically.
+**Normy photos**: drop images into `file/pet/normy---Di Wu/` — all are picked up automatically.
 
 ---
 
@@ -100,10 +100,10 @@ Supported formats: `jpg` · `jpeg` · `png` · `gif` · `webp` · `heic` (upperc
 The photo manifest (`data/photo_manifest.json`) is **auto-generated** on every deploy — no manual update needed.
 
 ### Photo — Healing the Day tab — `file/pet/`
-Folder naming convention: `<pet-name>-<Owner Name>` (e.g. `normy-Di Wu`).  
+Folder naming convention: `<pet-name>---<Owner Name>` (e.g. `normy---Di Wu`).  
 The pet name and owner name are parsed from the folder name automatically.
 
-1. Create a folder under `file/pet/` named `<pet-name>-<Owner Name>`.
+1. Create a folder under `file/pet/` named `<pet-name>---<Owner Name>`.
 2. Drop image files into that folder.
 
 Supported formats: `jpg` · `jpeg` · `png` · `gif` · `webp` · `heic` (uppercase extensions also accepted).
