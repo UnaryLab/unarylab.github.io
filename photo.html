@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Photo — Unary Lab</title>
+  <meta name="description" content="Photos and events from Unary Lab (Di Wu, UCF ECE).">
   <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body>
 
@@ -16,7 +15,7 @@
 <main>
   <div class="container">
     <div id="photo-root">
-      <p style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</p>
+      <p class="placeholder-msg">Loading…</p>
     </div>
   </div>
 </main>
@@ -32,15 +31,9 @@ function dateToPrefix(str) {
   return `${y}${m}${day}`;
 }
 
-function formatFullDate(str) {
-  const d = parseNewsDate(str);
-  if (!d) return '';
-  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
-}
-
 function renderEventsTab(entries) {
   if (entries.length === 0)
-    return '<p style="color:#9ca3af;font-size:14px;padding:10px 0">No photos yet.</p>';
+    return placeholder('No photos yet.');
   return `<ul class="photo-timeline">${entries.map(entry => {
     const dateDisplay = formatFullDate(entry.date);
     const images = entry.files.map(f =>
@@ -57,7 +50,7 @@ function renderEventsTab(entries) {
 
 function renderHealingTab(petManifest) {
   if (petManifest.length === 0)
-    return '<p style="color:#9ca3af;font-size:14px;padding:10px 0">No pets yet.</p>';
+    return placeholder('No pets yet.');
   const sorted = [...petManifest].sort((a, b) => {
     const na = a.folder.split('---')[0].toLowerCase();
     const nb = b.folder.split('---')[0].toLowerCase();
@@ -81,23 +74,14 @@ function renderHealingTab(petManifest) {
   }).join('');
 }
 
-let eventsHtml = '', healingHtml = '';
-
-function showTab(tab) {
-  document.querySelectorAll('.pub-tab').forEach(b =>
-    b.classList.toggle('active', b.dataset.tab === tab)
-  );
-  document.getElementById('photo-content').innerHTML =
-    tab === 'events' ? eventsHtml : healingHtml;
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const [photos, photoManifest, petManifest] = await Promise.all([
+    const [photos, manifest] = await Promise.all([
       loadCSV('data/photo.csv'),
-      loadJSON('data/photo_manifest.json'),
-      loadJSON('data/pet_manifest.json'),
+      loadFileManifest(),
     ]);
+    const photoManifest = manifest.photo || [];
+    const petManifest = manifest.pet || [];
 
     const folderMap = {};
     photoManifest.forEach(m => { folderMap[m.folder.slice(0, 8)] = m; });
@@ -108,23 +92,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       return { ...p, folder: m ? m.folder : null, files: m ? m.files : [] };
     }));
 
-    eventsHtml  = renderEventsTab(entries);
-    healingHtml = renderHealingTab(petManifest);
-
-    document.getElementById('photo-root').innerHTML = `
-      <div class="pub-tab-bar">
-        <button class="pub-tab" data-tab="events">Events</button>
-        <button class="pub-tab" data-tab="healing">Healing the Day</button>
-      </div>
-      <div id="photo-content"></div>`;
-
-    document.querySelectorAll('.pub-tab').forEach(btn =>
-      btn.addEventListener('click', () => showTab(btn.dataset.tab))
-    );
-    showTab('events');
+    setupTabs(document.getElementById('photo-root'), [
+      { id: 'events',  label: 'Events',          html: renderEventsTab(entries) },
+      { id: 'healing', label: 'Healing the Day', html: renderHealingTab(petManifest) },
+    ], 'events');
   } catch (e) {
-    document.getElementById('photo-root').innerHTML =
-      '<p style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load photos.</p>';
+    document.getElementById('photo-root').innerHTML = placeholder('Could not load photos.');
     console.error(e);
   }
 });

@@ -3,6 +3,14 @@
 Static site hosted on GitHub Pages at `https://unarylab.github.io/`.  
 Push to `main` and GitHub Actions deploys automatically.
 
+To preview locally, serve over HTTP (the pages `fetch()` data files, so `file://` won't work):
+
+```sh
+python3 -m http.server 8000      # open http://localhost:8000
+```
+
+After adding files under `file/`, run `python3 scripts/generate_manifests.py` so the local preview can find them. The deploy regenerates the manifest automatically, so this step is only for local preview.
+
 ---
 
 ## Adding Content
@@ -10,7 +18,7 @@ Push to `main` and GitHub Actions deploys automatically.
 ### Home — `data/profile.json`
 Edit directly. Fields: `name`, `phonetic`, `bio`, `email`, `scholar`, `github`, `linkedin`, `dblp`, `cv`, `photo`, `normy_caption`.
 
-**Profile photo**: place at the path specified in `profile.json` (default: `file/headshot/Di Wu.jpg`).
+**Profile photo**: drop a headshot at `file/headshot/<name>.<ext>` (any supported extension: `jpg` · `jpeg` · `png` · `webp` · `heic`). It's matched automatically by the `name` in `profile.json`, so swapping the file (or its extension) needs no further edits. The optional `photo` field overrides this with an explicit path or external URL.
 
 **Normy photos**: drop images into `file/pet/normy---Di Wu/` — all are picked up automatically.
 
@@ -97,7 +105,7 @@ Names with affiliations in parentheses (e.g. `Arya Mahesh Patil (IIT Bombay)`) a
 
 Supported formats: `jpg` · `jpeg` · `png` · `gif` · `webp` · `heic` (uppercase extensions also accepted).
 
-The photo manifest (`data/photo_manifest.json`) is **auto-generated** on every deploy — no manual update needed.
+The asset manifest (`data/file_manifest.json`) is **auto-generated** on every deploy; no manual update needed.
 
 ### Photo — Healing the Day tab — `file/pet/`
 Folder naming convention: `<pet-name>---<Owner Name>` (e.g. `normy---Di Wu`).  
@@ -108,7 +116,7 @@ The pet name and owner name are parsed from the folder name automatically.
 
 Supported formats: `jpg` · `jpeg` · `png` · `gif` · `webp` · `heic` (uppercase extensions also accepted).
 
-The pet manifest (`data/pet_manifest.json`) is **auto-generated** on every deploy — no manual update needed.
+The asset manifest (`data/file_manifest.json`) is **auto-generated** on every deploy; no manual update needed.
 
 ---
 

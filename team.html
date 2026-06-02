@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Team — Unary Lab</title>
+  <meta name="description" content="Members and alumni of Unary Lab (Di Wu, UCF ECE).">
   <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body>
 
@@ -16,7 +15,7 @@
 <main>
   <div class="container">
     <div id="team-root">
-      <p style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</p>
+      <p class="placeholder-msg">Loading…</p>
     </div>
   </div>
 </main>
@@ -25,10 +24,10 @@
 <script>
 function isCurrent(m) { return !m.leave || m.leave.trim() === ''; }
 
-async function probeHeadshot(name) {
+function resolveHeadshot(name, manifest) {
   const base = name.replace(/\s*\(.*?\)\s*/g, '').trim();
   for (const ext of ['jpg', 'jpeg', 'png', 'webp', 'heic']) {
-    const found = await probeFile(`file/headshot/${encodeURIComponent(base)}.${ext}`);
+    const found = resolveFile(manifest, 'headshot', `${base}.${ext}`);
     if (found) return found;
   }
   return null;
@@ -40,7 +39,7 @@ function renderMemberCard(m) {
     : esc(m.title);
   const photo = m._headshot
     ? `<img src="${esc(m._headshot)}" alt="${esc(m.title)}" loading="lazy">`
-    : `<div class="member-avatar"><i class="fas fa-user"></i></div>`;
+    : `<div class="member-avatar">${icon('user')}</div>`;
   const extras = [
     m.credit     && `<span class="credit">${esc(m.credit)}</span>`,
     m.internship && `Intern: ${esc(m.internship)}`,
@@ -78,11 +77,14 @@ function renderAlumniItem(m) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const rawMembers = await loadCSV('data/team.csv');
-    const members = await Promise.all(rawMembers.map(async m => ({
+    const [rawMembers, manifest] = await Promise.all([
+      loadCSV('data/team.csv'),
+      loadFileManifest(),
+    ]);
+    const members = rawMembers.map(m => ({
       ...m,
-      _headshot: await probeHeadshot(m.title),
-    })));
+      _headshot: resolveHeadshot(m.title, manifest),
+    }));
 
     const current = members.filter(isCurrent);
     const alumni  = members.filter(m => !isCurrent(m))
@@ -116,13 +118,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (html === '') {
-      html = '<p style="color:#9ca3af;font-size:14px;padding:10px 0">No team members listed yet.</p>';
+      html = placeholder('No team members listed yet.');
     }
 
     document.getElementById('team-root').innerHTML = `<h1 class="page-title">Team</h1>${html}`;
   } catch (e) {
-    document.getElementById('team-root').innerHTML =
-      '<p style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load team data.</p>';
+    document.getElementById('team-root').innerHTML = placeholder('Could not load team data.');
     console.error(e);
   }
 });

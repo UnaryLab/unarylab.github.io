@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>News — Unary Lab</title>
+  <meta name="description" content="Latest news from Unary Lab (Di Wu, UCF ECE).">
   <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body>
 
@@ -16,7 +15,7 @@
 <main>
   <div class="container">
     <div id="news-root">
-      <p style="color:#9ca3af;font-size:14px;padding:10px 0">Loading…</p>
+      <p class="placeholder-msg">Loading…</p>
     </div>
   </div>
 </main>
@@ -28,13 +27,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const news = sortDescByDate((await loadCSV('data/news.csv')).filter(n => n.date && n.date.trim()));
     const root = document.getElementById('news-root');
     if (news.length === 0) {
-      root.innerHTML = '<h1 class="page-title">News</h1><p style="color:#aaa;font-size:14px;padding:8px 0">No news yet.</p>';
+      root.innerHTML = `<h1 class="page-title">News</h1>${placeholder('No news yet.')}`;
     } else {
       root.innerHTML = `<h1 class="page-title">News</h1><ul class="news-list">${news.map(renderNewsItem).join('')}</ul>`;
     }
   } catch (e) {
-    document.getElementById('news-root').innerHTML =
-      '<p style="color:#9ca3af;font-size:14px;padding:10px 0">Could not load news.</p>';
+    document.getElementById('news-root').innerHTML = placeholder('Could not load news.');
     console.error(e);
   }
 });

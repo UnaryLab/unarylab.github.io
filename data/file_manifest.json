@@ -1,0 +1,165 @@
+{
+  "publication": [
+    "2013-10-28-asicon-paper.pdf",
+    "2014-10-14-tcasii-paper.pdf",
+    "2015-05-24-iscas-paper.pdf",
+    "2015-07-21-dsp-paper.pdf",
+    "2016-02-25-tcasii-paper.pdf",
+    "2016-03-20-icassp-paper.pdf",
+    "2019-06-02-dac-paper.pdf",
+    "2019-06-02-dac-poster.pdf",
+    "2019-06-02-dac-slide.pdf",
+    "2019-07-29-islped-paper.pdf",
+    "2019-07-29-islped-poster.pdf",
+    "2019-07-29-islped-slide.pdf",
+    "2020-01-19-iceic-paper.pdf",
+    "2020-05-30-isca-paper.pdf",
+    "2020-05-30-isca-slide.pdf",
+    "2021-01-11-ieeedt-paper.pdf",
+    "2021-01-18-aspdac-paper.pdf",
+    "2021-01-18-aspdac-slide.pdf",
+    "2021-05-26-ieeemicro-paper.pdf",
+    "2021-07-26-islped-paper.pdf",
+    "2021-07-26-islped-slide.pdf",
+    "2021-10-24-iccd-paper.pdf",
+    "2021-10-24-iccd-slide.pdf",
+    "2022-02-12-hpca-paper.pdf",
+    "2022-02-12-hpca-slide.pdf",
+    "2022-03-01-yarch-paper.pdf",
+    "2022-06-18-isca-paper.pdf",
+    "2022-06-18-isca-poster.pdf",
+    "2022-06-18-isca-slide.pdf",
+    "2024-04-27-asplos-paper.pdf",
+    "2024-04-27-asplos-poster.pdf",
+    "2024-04-27-asplos-slide.pdf",
+    "2024-04-28-wuc-paper.pdf",
+    "2024-04-28-yarch-paper.pdf",
+    "2024-06-29-isca-paper.pdf",
+    "2024-06-29-isca-slide.pdf",
+    "2024-07-01-isvlsi-paper.pdf",
+    "2024-10-28-tps-isa-paper.pdf",
+    "2024-11-02-micro-paper.pdf",
+    "2024-11-02-micro-slide.pdf",
+    "2024-12-28-scientific-report-paper.pdf",
+    "2025-03-17-gomatech-paper.pdf",
+    "2025-07-08-isvlsi-paper.pdf",
+    "2025-07-08-isvlsi-poster.pdf",
+    "2025-08-06-islped-paper.pdf",
+    "2025-08-31-qce-paper.pdf",
+    "2025-08-31-qce-poster.pdf",
+    "2025-10-27-tnsre-paper.pdf",
+    "2025-11-10-iccd-paper.pdf",
+    "2026-03-22-asplos-paper.pdf",
+    "2026-03-22-asplos-slide.pptx",
+    "2026-04-13-todaes-paper.pdf",
+    "2026-04-26-ispass-paper.pdf",
+    "2026-06-22-igsc-paper.pdf",
+    "2026-06-27-isca-paper.pdf"
+  ],
+  "headshot": [
+    "Chetan Choudhary.JPG",
+    "Daniel Price.jpg",
+    "Di Wu.png",
+    "Di Wu_backup.jpg",
+    "Marco Kurzynski.jpg",
+    "Yang Yu.jpg",
+    "Zubaidah Al-Mashhadani.jpeg"
+  ],
+  "software": [
+    "Carat.pdf",
+    "Chopper.pdf",
+    "CryptOracle.pdf",
+    "Lit Silicon.pdf",
+    "LoAS.pdf",
+    "Mugi.pdf",
+    "Syndrilla.pdf",
+    "UnarySim.pdf"
+  ],
+  "photo": [
+    {
+      "folder": "20240430-asplos",
+      "files": [
+        "IMG_0978.jpg",
+        "IMG_3717.jpg",
+        "IMG_9771.jpg"
+      ]
+    },
+    {
+      "folder": "20250430-gathering",
+      "files": [
+        "IMG_9752.jpg"
+      ]
+    },
+    {
+      "folder": "20250706-isvlsi",
+      "files": [
+        "20250706-1.jpeg",
+        "20250706-2.jpeg"
+      ]
+    },
+    {
+      "folder": "20251122-gathering",
+      "files": [
+        "20251122-1.jpg",
+        "20251122-2.jpg"
+      ]
+    },
+    {
+      "folder": "20260324-asplos",
+      "files": [
+        "IMG_1094.jpg",
+        "IMG_1095.jpg"
+      ]
+    },
+    {
+      "folder": "20260409-fqc",
+      "files": [
+        "IMG_6279.jpg"
+      ]
+    },
+    {
+      "folder": "20260503-gathering",
+      "files": [
+        "IMG_1187.jpg",
+        "IMG_1190.jpg",
+        "IMG_1192.jpg"
+      ]
+    }
+  ],
+  "pet": [
+    {
+      "folder": "ace---Chetan Choudhary",
+      "files": [
+        "1E61E691-87D0-4DA9-9D43-B76C9C07ED18.JPG",
+        "EBB4757A-9E16-4A0F-82D2-B8ACCF236102.JPG",
+        "IMG_0248.jpg",
+        "IMG_0256.jpg",
+        "IMG_0275.jpg",
+        "IMG_5272.PNG",
+        "IMG_5662.HEIC",
+        "IMG_6005.JPG"
+      ]
+    },
+    {
+      "folder": "GG and Quindim---Zubaidah Al-Mashhadani",
+      "files": [
+        "Image (1).jpeg",
+        "Image (2).jpeg",
+        "Image (3).jpeg",
+        "Image (4).jpeg"
+      ]
+    },
+    {
+      "folder": "normy---Di Wu",
+      "files": [
+        "normy1.JPG",
+        "normy2.jpg",
+        "normy3.jpg",
+        "normy4.jpg",
+        "normy5.jpg",
+        "normy6.JPG",
+        "normy7.JPG"
+      ]
+    }
+  ]
+}

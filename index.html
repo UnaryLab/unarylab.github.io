@@ -7,8 +7,6 @@
   <meta name="description" content="Unary Lab — Di Wu, Assistant Professor at UCF ECE">
   <link rel="icon" href="file/logo/unary-logo-black.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body>
 
@@ -20,7 +18,7 @@
     <section class="profile" id="profile-section">
 
       <div class="profile-photo">
-        <img id="profile-photo" src="file/headshot/Di Wu.jpg" alt="Di Wu">
+        <img id="profile-photo" src="file/headshot/Di Wu.png" alt="Di Wu">
         <div class="profile-id">
           <h1 id="profile-name">Di Wu</h1>
         </div>
@@ -48,25 +46,32 @@
 <script>
 const VISIBLE = 3;   /* images shown at once */
 
-function probeNormyImages(folder, max) {
-  return new Promise(resolve => {
-    const found = [];
-    let i = 1;
-    function tryExt(exts) {
-      if (exts.length === 0) { resolve(found); return; }
-      const [ext, ...rest] = exts;
-      const src = `${folder}/normy${i}.${ext}`;
-      const img = new Image();
-      img.onload  = () => { found.push(src); i++; tryNext(); };
-      img.onerror = () => tryExt(rest);
-      img.src = encodeURI(src) + `?t=${Date.now()}`;
+/* Pull the owner's pet photos from the generated pet manifest (the same
+   images shown on the Photo page), instead of probing for normy1.jpg, … */
+async function loadNormyImages(ownerName) {
+  try {
+    const manifest = await loadFileManifest();
+    const pets = manifest.pet || [];
+    const entry = pets.find(p => (p.folder.split('---')[1] || '').trim() === ownerName)
+               || pets.find(p => p.folder.toLowerCase().startsWith('normy---'));
+    if (!entry) return [];
+    return entry.files.map(f => `file/pet/${entry.folder}/${f}`);
+  } catch { return []; }
+}
+
+/* Find the profile photo by searching file/headshot/<name>.<ext> in the
+   manifest (case-insensitive, any supported extension). Falls back to the
+   explicit `photo` field for a non-headshot path or external URL. */
+async function resolveProfilePhoto(p) {
+  const base = (p.name || '').trim();
+  if (base) {
+    const manifest = await loadFileManifest();
+    for (const ext of ['jpg', 'jpeg', 'png', 'webp', 'heic']) {
+      const hit = resolveFile(manifest, 'headshot', `${base}.${ext}`);
+      if (hit) return hit;
     }
-    function tryNext() {
-      if (i > max) { resolve(found); return; }
-      tryExt(['jpg', 'JPG']);
-    }
-    tryNext();
-  });
+  }
+  return p.photo || null;
 }
 
 let nIdx = 0, nSlides = 0, nTimer = null, nItemWidth = 0;
@@ -139,13 +144,17 @@ function startTimer() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  let ownerName = 'Di Wu';
   try {
     const p = await loadJSON('data/profile.json');
+    ownerName = p.name || ownerName;
     document.title = `Unary Lab — ${p.name}`;
     document.getElementById('profile-name').innerHTML =
       `${esc(p.name)}${p.phonetic ? ` <span class="phonetic">${esc(p.phonetic)}</span>` : ''}`;
-    if (p.photo) document.getElementById('profile-photo').src = p.photo;
-    document.getElementById('profile-photo').alt = p.name || 'Di Wu';
+    const photoEl = document.getElementById('profile-photo');
+    photoEl.alt = p.name || 'Di Wu';
+    const photoSrc = await resolveProfilePhoto(p);
+    if (photoSrc) photoEl.src = photoSrc;
 
     const bioHtml = (Array.isArray(p.bio) ? p.bio : [p.bio])
       .filter(Boolean).map(t => `<p>${esc(t)}</p>`).join('');
@@ -155,17 +164,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('normy-caption').textContent = p.normy_caption;
 
     const socials = [
-      p.scholar  && `<a href="${esc(p.scholar)}"  target="_blank" rel="noopener"><i class="fas fa-graduation-cap"></i><span>Google Scholar</span></a>`,
-      p.github   && `<a href="${esc(p.github)}"   target="_blank" rel="noopener"><i class="fab fa-github"></i><span>GitHub</span></a>`,
-      p.linkedin && `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i><span>LinkedIn</span></a>`,
-      p.email    && `<a href="mailto:${esc(p.email)}"><i class="fas fa-envelope"></i><span>Email</span></a>`,
-      p.dblp     && `<a href="${esc(p.dblp)}"     target="_blank" rel="noopener"><i class="fas fa-database"></i><span>DBLP</span></a>`,
-      p.cv       && `<a href="${esc(p.cv)}"        target="_blank" rel="noopener"><i class="fas fa-file-alt"></i><span>CV</span></a>`,
+      p.scholar  && `<a href="${esc(p.scholar)}"  target="_blank" rel="noopener">${icon('scholar')}<span>Google Scholar</span></a>`,
+      p.github   && `<a href="${esc(p.github)}"   target="_blank" rel="noopener">${icon('github')}<span>GitHub</span></a>`,
+      p.linkedin && `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener">${icon('linkedin')}<span>LinkedIn</span></a>`,
+      p.email    && `<a href="mailto:${esc(p.email)}">${icon('email')}<span>Email</span></a>`,
+      p.dblp     && `<a href="${esc(p.dblp)}"     target="_blank" rel="noopener">${icon('dblp')}<span>DBLP</span></a>`,
+      p.cv       && `<a href="${esc(p.cv)}"        target="_blank" rel="noopener">${icon('cv')}<span>CV</span></a>`,
     ].filter(Boolean).join('');
     document.getElementById('social-links').innerHTML = socials;
   } catch (e) { console.warn('profile.json', e); }
 
-  const images = await probeNormyImages('file/pet/normy---Di Wu', 50);
+  const images = await loadNormyImages(ownerName);
   if (images.length > 0) buildCarousel(images);
 });
 </script>
