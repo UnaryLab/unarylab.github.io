@@ -45,7 +45,9 @@ There is one manifest, `data/file_manifest.json` (keys: `publication`, `headshot
 
 ## Deploy (`.github/workflows`)
 
-On push to `main`, the workflow: (1) runs `scripts/generate_manifests.py` to regenerate `data/file_manifest.json` by scanning the `file/` subdirectories, then commits it back with `[skip ci]`; (2) stamps the commit short-SHA into every `style.css?v=` and `utils.js?v=` reference in the `*.html` files for cache-busting; (3) uploads the whole repo and deploys to Pages. The manifest commit means the manifest in the repo may lag the directories, which is expected; CI is the source of truth.
+**Pages source must be "GitHub Actions"** (`build_type: workflow`), not "Deploy from a branch". The cache-busting `?v=` stamp (step 2 below) only edits the workflow's working-tree copy of the HTML; legacy branch deploys ignore that and serve the committed `?v=1` forever, so returning visitors get a stale `utils.js` and pages hang on "Loading…". If the site breaks that way again, check `gh api repos/UnaryLab/unarylab.github.io/pages` for `build_type`.
+
+On push to `main` (or manual `workflow_dispatch`), the workflow: (1) runs `scripts/generate_manifests.py` to regenerate `data/file_manifest.json` by scanning the `file/` subdirectories, then commits it back with `[skip ci]`; (2) stamps the commit short-SHA into every `style.css?v=` and `utils.js?v=` reference in the `*.html` files for cache-busting; (3) uploads the whole working tree as the Pages artifact and deploys it. The manifest commit means the manifest in the repo may lag the directories, which is expected; the deployed artifact is the source of truth.
 
 ## Conventions
 
