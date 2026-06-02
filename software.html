@@ -22,23 +22,11 @@
 
 <script src="js/utils.js?v=1"></script>
 <script>
-function resolvePaper(pub, manifest) {
-  const field = (pub['paper/slide/poster'] || '').trim();
-  if (!field) return null;
-  if (/^https?:\/\//.test(field)) return field;
-  return resolveFile(manifest, 'publication', `${field}-paper.pdf`);
-}
-
 function renderSoftwareItem(p) {
   const dateDisplay = formatNewsDate(p.date);
-  const links = [
-    p._paper && `[<a href="${esc(p._paper)}" target="_blank" rel="noopener">paper</a>]`,
-    p.code   && `[<a href="${esc(p.code)}"   target="_blank" rel="noopener">code</a>]`,
-  ].filter(Boolean).join(' ');
-  const awards = [p.award1, p.award2, p.award3]
-    .filter(Boolean)
-    .map(a => `<div class="pub-award">🏅 ${esc(a)}</div>`)
-    .join('');
+  const links = [bracketLink(p._paper, 'paper'), bracketLink(p.code, 'code')]
+    .filter(Boolean).join(' ');
+  const awards = renderAwards(p);
 
   const thumb = p._thumb
     ? `<iframe src="${esc(p._thumb)}#toolbar=0&navpanes=0" title="${esc(p.software)}"
@@ -69,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
     const software = sortDescByDate(filtered.map(p => ({
       ...p,
-      _paper: resolvePaper(p, manifest),
+      _paper: resolvePubLinks(p['paper/slide/poster'], manifest)._paper,
       _thumb: resolveFile(manifest, 'software', `${p.software}.pdf`),
     })));
 

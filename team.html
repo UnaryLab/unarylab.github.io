@@ -24,19 +24,14 @@
 <script>
 function isCurrent(m) { return !m.leave || m.leave.trim() === ''; }
 
-function resolveHeadshot(name, manifest) {
-  const base = name.replace(/\s*\(.*?\)\s*/g, '').trim();
-  for (const ext of ['jpg', 'jpeg', 'png', 'webp', 'heic']) {
-    const found = resolveFile(manifest, 'headshot', `${base}.${ext}`);
-    if (found) return found;
-  }
-  return null;
+function nameLink(m) {
+  return m.link
+    ? `<a href="${esc(m.link)}" target="_blank" rel="noopener">${esc(m.title)}</a>`
+    : esc(m.title);
 }
 
 function renderMemberCard(m) {
-  const nameEl = m.link
-    ? `<a href="${esc(m.link)}" target="_blank" rel="noopener">${esc(m.title)}</a>`
-    : esc(m.title);
+  const nameEl = nameLink(m);
   const photo = m._headshot
     ? `<img src="${esc(m._headshot)}" alt="${esc(m.title)}" loading="lazy">`
     : `<div class="member-avatar">${icon('user')}</div>`;
@@ -55,9 +50,7 @@ function renderMemberCard(m) {
 }
 
 function renderAlumniItem(m) {
-  const nameEl = m.link
-    ? `<a href="${esc(m.link)}" target="_blank" rel="noopener">${esc(m.title)}</a>`
-    : esc(m.title);
+  const nameEl = nameLink(m);
   const tenure = [m.join, m.leave].filter(Boolean).join('–');
   const parts = [
     tenure       && esc(tenure),

@@ -81,6 +81,33 @@ function resolveFile(manifest, dir, filename) {
   return hit ? `file/${dir}/${encodeURIComponent(hit)}` : null;
 }
 
+/* Resolve a headshot by person name (parenthetical affiliations stripped),
+   trying each supported extension. Used by the Team and Home pages. */
+function resolveHeadshot(name, manifest) {
+  const base = (name || '').replace(/\s*\(.*?\)\s*/g, '').trim();
+  if (!base) return null;
+  for (const ext of ['jpg', 'jpeg', 'png', 'webp', 'heic']) {
+    const hit = resolveFile(manifest, 'headshot', `${base}.${ext}`);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+/* Resolve a publication's paper/slide/poster links from the manifest given
+   its `Paper/Slide/Poster` field. A full http(s) URL is treated as the paper
+   link. Used by the Publication and Software pages. */
+function resolvePubLinks(field, manifest) {
+  field = (field || '').trim();
+  if (!field) return { _paper: null, _slide: null, _poster: null };
+  if (/^https?:\/\//.test(field)) return { _paper: field, _slide: null, _poster: null };
+  const find = name => resolveFile(manifest, 'publication', name);
+  return {
+    _paper:  find(`${field}-paper.pdf`),
+    _slide:  find(`${field}-slide.pdf`) || find(`${field}-slide.pptx`),
+    _poster: find(`${field}-poster.pdf`),
+  };
+}
+
 /* ── HTML escape ────────────────────────────────────── */
 function esc(str) {
   if (!str) return '';
@@ -230,6 +257,20 @@ function sortDescByDate(arr) {
 }
 
 /* ── Renderers ───────────────────────────────────────── */
+
+/* Bracketed external link, e.g. [paper]; returns '' when url is empty. */
+function bracketLink(url, label) {
+  return url ? `[<a href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}</a>]` : '';
+}
+
+/* 🏅 award lines from a pub/software row's award1..3 fields. */
+function renderAwards(p) {
+  return [p.award1, p.award2, p.award3]
+    .filter(Boolean)
+    .map(a => `<div class="pub-award">🏅 ${esc(a)}</div>`)
+    .join('');
+}
+
 function renderNewsItem(n) {
   const dateDisplay = formatNewsDate(n.date);
   const dateEl = dateDisplay ? `<span class="news-date">[${dateDisplay}]</span> ` : '';
@@ -241,17 +282,14 @@ function renderPubItem(p) {
   const gem = (p.tier || '').toLowerCase().trim() === 'top' ? '💎 ' : '';
 
   const linkParts = [
-    p._paper  && `[<a href="${esc(p._paper)}"  target="_blank" rel="noopener">paper</a>]`,
-    p._slide  && `[<a href="${esc(p._slide)}"  target="_blank" rel="noopener">slides</a>]`,
-    p._poster && `[<a href="${esc(p._poster)}" target="_blank" rel="noopener">poster</a>]`,
-    p.code    && `[<a href="${esc(p.code)}"    target="_blank" rel="noopener">code</a>]`,
-    p.video   && `[<a href="${esc(p.video)}"   target="_blank" rel="noopener">video</a>]`,
+    bracketLink(p._paper,  'paper'),
+    bracketLink(p._slide,  'slides'),
+    bracketLink(p._poster, 'poster'),
+    bracketLink(p.code,    'code'),
+    bracketLink(p.video,   'video'),
   ].filter(Boolean).join(' ');
 
-  const awards = [p.award1, p.award2, p.award3]
-    .filter(Boolean)
-    .map(a => `<div class="pub-award">🏅 ${esc(a)}</div>`)
-    .join('');
+  const awards = renderAwards(p);
 
   const dateDisplay = formatNewsDate(p.date);
 

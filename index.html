@@ -60,18 +60,11 @@ async function loadNormyImages(ownerName) {
 }
 
 /* Find the profile photo by searching file/headshot/<name>.<ext> in the
-   manifest (case-insensitive, any supported extension). Falls back to the
-   explicit `photo` field for a non-headshot path or external URL. */
+   manifest. Falls back to the explicit `photo` field for a non-headshot
+   path or external URL. */
 async function resolveProfilePhoto(p) {
-  const base = (p.name || '').trim();
-  if (base) {
-    const manifest = await loadFileManifest();
-    for (const ext of ['jpg', 'jpeg', 'png', 'webp', 'heic']) {
-      const hit = resolveFile(manifest, 'headshot', `${base}.${ext}`);
-      if (hit) return hit;
-    }
-  }
-  return p.photo || null;
+  const manifest = await loadFileManifest();
+  return resolveHeadshot(p.name, manifest) || p.photo || null;
 }
 
 let nIdx = 0, nSlides = 0, nTimer = null, nItemWidth = 0;
