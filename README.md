@@ -83,7 +83,7 @@ Thumbnail goes in `file/software/<software-name>.pdf` (uppercase `.PDF` also acc
 | Employment | post-graduation destination (alumni only) |
 | Join | year (e.g. `2024`) |
 | Leave | year — leave blank for current members |
-| Degree | `PhD`, `MS`, or `BS` |
+| Degree | `Postdoc`, `PhD`, `MS`, or `BS` |
 | Credit | special credit text (shown in darkred) |
 | Internship | internship host (optional) |
 

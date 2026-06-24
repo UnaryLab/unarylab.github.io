@@ -84,15 +84,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       .sort((a, b) => parseInt(b.leave, 10) - parseInt(a.leave, 10));
 
     const byJoin = (a, b) => parseInt(a.join, 10) - parseInt(b.join, 10);
-    const phd  = current.filter(m => (m.degree || '').toUpperCase().startsWith('PHD')).sort(byJoin);
+    const postdocsAndPhd = current.filter(m => {
+      const degree = (m.degree || '').toUpperCase();
+      return degree === 'POSTDOC' || degree.startsWith('PHD');
+    }).sort(byJoin);
     const msbs = current.filter(m => ['MS','BS'].includes((m.degree || '').toUpperCase())).sort(byJoin);
 
     let html = '';
 
-    if (phd.length > 0) {
+    if (postdocsAndPhd.length > 0) {
       html += `<div class="team-section">
-        <div class="team-section-title">Current PhD Students</div>
-        <div class="team-grid">${phd.map(renderMemberCard).join('')}</div>
+        <div class="team-section-title">Current Postdocs and PhD Students</div>
+        <div class="team-grid">${postdocsAndPhd.map(renderMemberCard).join('')}</div>
       </div>`;
     }
 
