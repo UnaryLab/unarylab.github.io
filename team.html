@@ -39,12 +39,16 @@ function renderMemberCard(m) {
     m.credit     && `<span class="credit">${esc(m.credit)}</span>`,
     m.internship && `Intern: ${esc(m.internship)}`,
   ].filter(Boolean).join(' · ');
+  const research = m.research
+    ? `<div class="member-research">${esc(m.research)}</div>`
+    : '';
 
   return `
     <div class="team-card">
       ${photo}
       <div class="member-name">${nameEl}</div>
       <div class="member-degree">${esc(m.degree)}${m.join ? ` · ${esc(m.join)}` : ''}</div>
+      ${research}
       ${extras ? `<div class="member-info">${extras}</div>` : ''}
     </div>`;
 }
@@ -56,14 +60,20 @@ function renderAlumniItem(m) {
     tenure       && esc(tenure),
     m.degree     && esc(m.degree),
     m.internship && `Intern: ${esc(m.internship)}`,
-    m.credit     && `<span class="credit">${esc(m.credit)}</span>`,
+  ].filter(Boolean);
+  const details = [
+    m.research && esc(m.research),
+    m.credit   && `<span class="credit">${esc(m.credit)}</span>`,
   ].filter(Boolean);
   const employmentEl = m.employment
     ? `<span class="alumni-employment">${esc(m.employment)}</span>` : '';
 
   return `
     <li class="alumni-item">
-      <span><span class="alumni-name">${nameEl}</span>${parts.length ? ` — ${parts.join(' · ')}` : ''}</span>
+      <span class="alumni-main">
+        <span><span class="alumni-name">${nameEl}</span>${parts.length ? ` — ${parts.join(' · ')}` : ''}</span>
+        ${details.length ? `<span class="alumni-detail-line">${details.join(' · ')}</span>` : ''}
+      </span>
       ${employmentEl}
     </li>`;
 }

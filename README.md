@@ -86,6 +86,7 @@ Thumbnail goes in `file/software/<software-name>.pdf` (uppercase `.PDF` also acc
 | Degree | `Postdoc`, `PhD`, `MS`, or `BS` |
 | Credit | special credit text (shown in darkred) |
 | Internship | internship host (optional) |
+| Research | student research direction (optional; shown on current member cards and alumni rows) |
 
 **Headshots** go in `file/headshot/<Full Name>.<ext>`.  
 Supported formats: `jpg` · `jpeg` · `png` · `webp` · `heic` (uppercase extensions also accepted).  

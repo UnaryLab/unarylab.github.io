@@ -33,6 +33,8 @@ CSV headers are lowercased on parse, so refer to columns in lowercase in JS. `pr
 
 The Software page is **derived from `publication.csv`** (rows where both `Software` and `Description` are filled), not a separate data file.
 
+The Team page renders `team.csv`'s `Research` column under current member cards; for alumni, `Research` and `Credit` share a smaller indented detail line beneath the main alumni metadata.
+
 ### Assets (`file/`)
 
 Referenced by convention, matched at runtime against the generated manifests (case-insensitive):
