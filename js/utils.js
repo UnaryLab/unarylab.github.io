@@ -219,16 +219,16 @@ async function injectNav() {
 }
 
 /* ── Date helpers ─────────────────────────────────────────────────────────
-   Input format: M/D/YY  e.g. "3/27/26" or "10/7/25"
+   Input format: M/D/YYYY  e.g. "3/27/2026" (legacy 2-digit years parse as 20YY)
    formatNewsDate → YYYY/MM   formatFullDate → YYYY/MM/DD
    ──────────────────────────────────────────────────────────────────────── */
 function parseNewsDate(str) {
   if (!str || !str.trim()) return null;
   const parts = str.trim().split('/');
-  if (parts.length < 2) return null;
+  if (parts.length < 3) return null;
   const m = parseInt(parts[0], 10);
   const d = parseInt(parts[1], 10) || 1;
-  let y  = parts.length >= 3 ? parseInt(parts[2], 10) : 0;
+  let y  = parseInt(parts[2], 10);
   if (y < 100) y += 2000;
   if (isNaN(m) || isNaN(y)) return null;
   return new Date(y, m - 1, d);
@@ -309,7 +309,7 @@ function renderPubItem(p) {
 function initLightbox() {
   const lb = document.createElement('div');
   lb.className = 'lightbox';
-  lb.innerHTML = '<span class="lightbox-close">&times;</span><img src="" alt=""><iframe class="lightbox-pdf" src="" title=""></iframe>';
+  lb.innerHTML = '<button class="lightbox-close" aria-label="Close">&times;</button><img src="" alt=""><iframe class="lightbox-pdf" src="" title=""></iframe>';
   document.body.appendChild(lb);
 
   const img = lb.querySelector('img');

@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const [courses, boards] = await Promise.all([
       loadCSV('data/teaching.csv'),
-      loadCSV('data/leaderboard.csv'),
+      loadCSV('data/leaderboard.csv').catch(() => []),
     ]);
 
     const introHtml = boards.length

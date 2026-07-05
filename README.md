@@ -28,7 +28,7 @@ Edit directly. Fields: `name`, `phonetic`, `bio`, `email`, `scholar`, `github`, 
 | Column | Format |
 |--------|--------|
 | Title  | plain text |
-| Date   | `M/D/YY` (e.g. `3/27/26`) |
+| Date   | `M/D/YYYY` (e.g. `3/27/2026`) |
 | Link   | URL (optional) |
 
 ---
@@ -41,7 +41,7 @@ Edit directly. Fields: `name`, `phonetic`, `bio`, `email`, `scholar`, `github`, 
 | Selected | `yes` to appear in Selected tab |
 | Tier | `top` to show 💎 |
 | Venue | conference/journal name |
-| Date | `M/D/YY` |
+| Date | `M/D/YYYY` |
 | Paper/Slide/Poster | URL **or** filename prefix (e.g. `2026-03-22-asplos`) |
 | Video | URL (optional) |
 | Code | URL (optional) |
@@ -64,7 +64,7 @@ Thumbnail goes in `file/software/<software-name>.pdf` (uppercase `.PDF` also acc
 |--------|--------|
 | Title | course name |
 | Role | e.g. `Instructor`, `Teaching Assistant` |
-| Date | `M/D/YY` |
+| Date | `M/D/YYYY` |
 | Semester | `FA`, `SP`, `SU` |
 
 **Leaderboard links** — `data/leaderboard.csv`:
@@ -98,7 +98,7 @@ Names with affiliations in parentheses (e.g. `Arya Mahesh Patil (IIT Bombay)`) a
 | Column | Format |
 |--------|--------|
 | Title | caption text |
-| Date | `M/D/YY` |
+| Date | `M/D/YYYY` |
 
 1. Add a row to `data/photo.csv`.
 2. Create a folder under `file/photo/` named `YYYYMMDD-<slug>` (e.g. `20260503-gathering`).
