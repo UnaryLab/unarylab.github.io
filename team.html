@@ -30,11 +30,15 @@ function nameLink(m) {
     : esc(m.title);
 }
 
-function renderMemberCard(m) {
+function renderMemberCard(m, piUniversity) {
   const nameEl = nameLink(m);
   const photo = m._headshot
     ? `<img src="${esc(m._headshot)}" alt="${esc(m.title)}" loading="lazy">`
     : `<div class="member-avatar">${icon('user')}</div>`;
+  const showUniversity = m.university && m.university.trim().toLowerCase() !== (piUniversity || '').trim().toLowerCase();
+  const university = showUniversity
+    ? `<div class="member-university">${esc(m.university)}</div>`
+    : '';
   const extras = [
     m.credit     && `<span class="credit">${esc(m.credit)}</span>`,
     m.internship && `Intern: ${esc(m.internship)}`,
@@ -47,6 +51,7 @@ function renderMemberCard(m) {
     <div class="team-card">
       ${photo}
       <div class="member-name">${nameEl}</div>
+      ${university}
       <div class="member-degree">${esc(m.degree)}${m.join ? ` · ${esc(m.join)}` : ''}</div>
       ${research}
       ${extras ? `<div class="member-info">${extras}</div>` : ''}
@@ -56,9 +61,10 @@ function renderMemberCard(m) {
 function renderAlumniItem(m) {
   const nameEl = nameLink(m);
   const tenure = [m.join, m.leave].filter(Boolean).join('–');
+  const degree = [m.degree, m.university].filter(Boolean).map(esc).join(' @ ');
   const parts = [
     tenure       && esc(tenure),
-    m.degree     && esc(m.degree),
+    degree,
     m.internship && `Intern: ${esc(m.internship)}`,
   ].filter(Boolean);
   const details = [
@@ -80,10 +86,12 @@ function renderAlumniItem(m) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const [rawMembers, manifest] = await Promise.all([
+    const [rawMembers, manifest, profile] = await Promise.all([
       loadCSV('data/team.csv'),
       loadFileManifest(),
+      loadJSON('data/profile.json'),
     ]);
+    const piUniversity = profile.university || '';
     const members = rawMembers.map(m => ({
       ...m,
       _headshot: resolveHeadshot(m.title, manifest),
@@ -105,14 +113,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (postdocsAndPhd.length > 0) {
       html += `<div class="team-section">
         <div class="team-section-title">Current Postdocs and PhD Students</div>
-        <div class="team-grid">${postdocsAndPhd.map(renderMemberCard).join('')}</div>
+        <div class="team-grid">${postdocsAndPhd.map(m => renderMemberCard(m, piUniversity)).join('')}</div>
       </div>`;
     }
 
     if (msbs.length > 0) {
       html += `<div class="team-section">
         <div class="team-section-title">Current MS and BS Students</div>
-        <div class="team-grid">${msbs.map(renderMemberCard).join('')}</div>
+        <div class="team-grid">${msbs.map(m => renderMemberCard(m, piUniversity)).join('')}</div>
       </div>`;
     }
 

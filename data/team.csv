@@ -1,27 +1,31 @@
-﻿Title,Link,Employment,Join,Leave,Degree,Credit,Internship,Research
-Kristen Wang (Macalester College),,,2026,,BS,,,Agentic AI for finance
-Suhas Palawala (UIUC),,,2026,,BS,,,Agentic AI system
-Zubaidah Al-Mashhadani,https://www.linkedin.com/in/zubaidaha/,,2026,,Postdoc,,,Neuroengineering; unary computing
-Yang Yu,https://www.linkedin.com/in/yang-yu-508aba320/,,2026,,PhD,,,Neuromorphic computing
-Samuel Borges,,,2026,,BS,,,PyTorch code compilation
-Joshua Joseph,,,2026,,MS,,,RISC-V processor
-Arya Mahesh Patil (IIT Bombay),,,2026,,BS,,,VLP architecture
-Thien Ha Le,,,2026,,BS,,,Agentic AI system
-Arianny Jimenez,,,2026,,BS,,,Neuromorphic computing
-Sami Djahankhah,,,2026,,BS,,,Brain computer interface
-Caden Brock,,,2025,,BS,,,Quantum error correction
-Chetan Choudhary,https://www.linkedin.com/in/chetan-choudhary-770557183/,,2025,,PhD,,,Applied AI
-Nick Nimroozi,,,2025,,BS,,,Brain computer interface
-Thomas Danielsen,,,2025,,BS,,,Quantum error correction
-Lauren Caccamise,https://www.linkedin.com/in/lauren-caccamise-a183502ba/,PhD program at Purdue,2024,2025,BS,,,FHE
-Zubaidah Al-Mashhadani,https://www.linkedin.com/in/zubaidaha/,Postdoc at UCF,2024,2026,PhD,First PhD graduated ever,,Neuroengineering; unary computing
-Daniel Price,https://www.linkedin.com/in/daniel-price-ii/,,2024,,PhD,,,VLP; neuromorphic computing
-Marco Kurzynski,https://www.linkedin.com/in/marco-kurzynski-673766263/,,2024,,PhD,AMD PhD Research Fellowship,AMD Research,GPU architecture; AI system
-Yanzhang Zhu,https://www.linkedin.com/in/yanzhang-zhu-b61395222/,,2024,,PhD,,,Quantum computing
-Devon Lister,https://www.linkedin.com/in/devon-lister-843919155/,,2023,2026,BS,Best Paper Award at ISVLSI 2025,,Neuromorphic computing
-Tyler Goldsmith,https://www.linkedin.com/in/tylergoldsmith/,Full-time at AMD,2023,2024,BS,,AMD,Graph optimization
-Parker McLeod,https://www.linkedin.com/in/parker-mcleod/,Full-time at AMD,2023,2024,BS,Credited for lab logo and swag,AMD,FHE
-Cory Brynds,https://www.linkedin.com/in/corybrynds/,Full-time at AMD,2023,2026,MS,,AMD,FHE
-Mustafa Nisar (University of Toronto),https://www.linkedin.com/in/mustafa-nisar-b28233214/,,2023,2024,BS,,AMD,Neuromorphic computing
-Zhewen Pan,http://www.zhewenp.com,PhD program at UW-Madison,2021,2022,MS,,,Brain computer interface; unary computing
-Ruokai Yin,https://ruokaiyin.github.io/,PhD program at Yale,2019,2021,BS,,,Unary computing
+Title,University,Link,Employment,Join,Leave,Degree,Credit,Internship,Research
+Angel Bercian,UCF,,,2026,,BS,,,RISC-V processor
+Amulya Bhat,UCF,,,2026,,BS,,,RISC-V processor
+Fabian Nunez,UCF,,,2026,,BS,,,RISC-V processor
+Grigoriy Zolotarev,UCF,,,2026,,BS,,,AI accelerator ISA
+Kristen Wang,Macalester College,,,2026,,BS,,,Agentic AI for finance
+Suhas Palawala,UIUC,,,2026,,BS,,,Agentic AI system
+Zubaidah Al-Mashhadani,UCF,https://www.linkedin.com/in/zubaidaha/,,2026,,Postdoc,,,Neuroengineering; unary computing
+Yang Yu,UCF,https://www.linkedin.com/in/yang-yu-508aba320/,,2026,,PhD,,,Neuromorphic computing
+Samuel Borges,UCF,,,2026,,BS,,,PyTorch code compilation
+Joshua Joseph,UCF,,,2026,,MS,,,RISC-V processor
+Arya Mahesh Patil,IIT Bombay,,,2026,,BS,,,VLP architecture
+Thien Ha Le,UCF,,,2026,,BS,,,Agentic AI system
+Arianny Jimenez,UCF,,,2026,,BS,,,Neuromorphic computing
+Sami Djahankhah,UCF,,,2026,,BS,,,Brain computer interface
+Caden Brock,UCF,,,2025,,BS,,,Quantum error correction
+Chetan Choudhary,UCF,https://www.linkedin.com/in/chetan-choudhary-770557183/,,2025,,PhD,,,Applied AI
+Nick Nimroozi,UCF,,,2025,,BS,,,Brain computer interface
+Thomas Danielsen,UCF,,,2025,,BS,,,Quantum error correction
+Lauren Caccamise,UCF,https://www.linkedin.com/in/lauren-caccamise-a183502ba/,PhD program at Purdue,2024,2025,BS,,,FHE
+Zubaidah Al-Mashhadani,UCF,https://www.linkedin.com/in/zubaidaha/,Postdoc at UCF,2024,2026,PhD,First PhD graduated ever,,Neuroengineering; unary computing
+Daniel Price,UCF,https://www.linkedin.com/in/daniel-price-ii/,,2024,,PhD,,,VLP; neuromorphic computing
+Marco Kurzynski,UCF,https://www.linkedin.com/in/marco-kurzynski-673766263/,,2024,,PhD,AMD PhD Research Fellowship,AMD Research,GPU architecture; AI system
+Yanzhang Zhu,UCF,https://www.linkedin.com/in/yanzhang-zhu-b61395222/,,2024,,PhD,,,Quantum computing
+Devon Lister,UCF,https://www.linkedin.com/in/devon-lister-843919155/,,2023,2026,BS,Best Paper Award at ISVLSI 2025,,Neuromorphic computing
+Tyler Goldsmith,UCF,https://www.linkedin.com/in/tylergoldsmith/,Full-time at AMD,2023,2024,BS,,AMD,Graph optimization
+Parker McLeod,UCF,https://www.linkedin.com/in/parker-mcleod/,Full-time at AMD,2023,2024,BS,Credited for lab logo and swag,AMD,FHE
+Cory Brynds,UCF,https://www.linkedin.com/in/corybrynds/,Full-time at AMD,2023,2026,MS,,AMD,FHE
+Mustafa Nisar,University of Toronto,https://www.linkedin.com/in/mustafa-nisar-b28233214/,,2023,2024,BS,,AMD,Neuromorphic computing
+Zhewen Pan,UW-Madison,http://www.zhewenp.com,PhD program at UW-Madison,2021,2022,MS,,,Brain computer interface; unary computing
+Ruokai Yin,UW-Madison,https://ruokaiyin.github.io/,PhD program at Yale,2019,2021,BS,,,Unary computing
