@@ -24,6 +24,18 @@
 <script>
 function isCurrent(m) { return !m.leave || m.leave.trim() === ''; }
 
+// Clean name = the name with any parenthetical affiliation stripped.
+function cleanName(m) { return (m.title || '').replace(/\([^)]*\)/g, '').trim(); }
+function lastName(m) {
+  const parts = cleanName(m).split(/\s+/);
+  return (parts[parts.length - 1] || '').toLowerCase();
+}
+function firstName(m) { return (cleanName(m).split(/\s+/)[0] || '').toLowerCase(); }
+// Sort by last name, then first name (both alphabetical).
+function byLastName(a, b) {
+  return lastName(a).localeCompare(lastName(b)) || firstName(a).localeCompare(firstName(b));
+}
+
 function nameLink(m) {
   return m.link
     ? `<a href="${esc(m.link)}" target="_blank" rel="noopener">${esc(m.title)}</a>`
@@ -99,9 +111,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const current = members.filter(isCurrent);
     const alumni  = members.filter(m => !isCurrent(m))
-      .sort((a, b) => parseInt(b.leave, 10) - parseInt(a.leave, 10));
+      .sort((a, b) => (parseInt(b.leave, 10) - parseInt(a.leave, 10)) || byLastName(a, b));
 
-    const byJoin = (a, b) => parseInt(a.join, 10) - parseInt(b.join, 10);
+    const byJoin = (a, b) => (parseInt(a.join, 10) - parseInt(b.join, 10)) || byLastName(a, b);
     const postdocsAndPhd = current.filter(m => {
       const degree = (m.degree || '').toUpperCase();
       return degree === 'POSTDOC' || degree.startsWith('PHD');
