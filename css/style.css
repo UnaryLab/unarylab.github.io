@@ -170,6 +170,16 @@ nav {
 
 /* ── Normy carousel ──────────────────────────────────── */
 .normy-section { margin-top: 55px; }
+
+/* Fixed bio slot: extra bio text scrolls inside instead of pushing the
+   Normy section down. Bump the height if the bio should show more lines.
+   Desktop only; on mobile the columns stack and scrolling would hurt.
+   Must come after the base .normy-section rule to win the cascade. */
+@media (min-width: 769px) {
+  .bio { height: 230px; overflow-y: auto; }
+  .bio p:last-child { margin-bottom: 0; }
+  .normy-section { margin-top: 29px; }
+}
 .normy-caption { font-size: 15px; color: #888; margin-bottom: 8px; }
 .normy-carousel {
   position: relative;
