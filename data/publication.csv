@@ -10,7 +10,7 @@ Mugi: Value Level Parallelism For Efficient LLMs,"Daniel Price, Prabhu Vellaisam
 Mugi: Value Level Parallelism For Nonlinear Operations in LLMs,"Daniel Price, Prabhu Vellaisamy, John Shen, Di Wu",,,WUC,3/22/2026,,,,,,,,
 Agraph: A unified Graph Representation for At-Will Simulation of Emerging Stacks,"Daniel Price, Prabhu Vellaisamy, Patricia Gonzalez, George Michelogiannakis, John Shen, Di Wu",,,WUC,3/22/2026,,,,,,,,
 uSense: Unary-Computing-based Stochastic Edge Neuromorphic Sensing,"Zubaidah Al-Mashhadani, Mohsen Rakhshan, Di Wu",yes,,Research Square preprint,3/14/2026,https://www.researchsquare.com/article/rs-8961215,,,,,,,
-A-Graph: A Unified Graph Representation for Cross-Stack Cost Modeling,"Daniel Price, Prabhu Vellaisamy, Patricia Gonzalez, George Michelogiannakis, John Shen, Di Wu",yes,,arXiv preprint,2/5/2026,https://arxiv.org/pdf/2602.04847,,https://github.com/UnaryLab/archx,,,,Archx,"An event-based cost-modeling framework for computer-system design-space exploration, built around the A-Graph abstraction."
+A-Graph: A Unified Graph Representation for Cross-Stack Cost Modeling,"Daniel Price, Prabhu Vellaisamy, Patricia Gonzalez, George Michelogiannakis, John Shen, Di Wu",yes,,arXiv preprint,2/5/2026,https://arxiv.org/abs/2602.04847,,https://github.com/UnaryLab/archx,,,,Archx,"An event-based cost-modeling framework for computer-system design-space exploration, built around the A-Graph abstraction."
 Catwalk Neuron for Efficient Temporal Neural Networks,Di Wu,,,ECI,2/2/2026,,,,,,,,
 EnerQy: Energy Estimation for Quantum Computing ,"Di Wu, Siyuan Niu, Zhipeng Deng",,,ECI,2/2/2026,,,,,,,,
 Sense-as-You-Go: A Neuromorphic Framework for Efficient Edge Sensing and Processing,"Di Wu, Mohsen Rakhshan",,,ECI,2/2/2026,,,,,,,,
