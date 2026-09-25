@@ -14,3 +14,6 @@
 .serena/
 .tokensave
 .gstack/
+
+# Overleaf-synced CV source (only the built PDF is published)
+file/cv/CV_Di_Wu_overleaf/
