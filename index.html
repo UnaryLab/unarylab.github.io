@@ -161,6 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       p.github   && `<a href="${esc(p.github)}"   target="_blank" rel="noopener">${icon('github')}<span>GitHub</span></a>`,
       p.linkedin && `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener">${icon('linkedin')}<span>LinkedIn</span></a>`,
       p.email    && `<a href="mailto:${esc(p.email)}">${icon('email')}<span>Email</span></a>`,
+      p.orcid    && `<a href="${esc(p.orcid)}"    target="_blank" rel="noopener">${icon('orcid')}<span>ORCID</span></a>`,
       p.dblp     && `<a href="${esc(p.dblp)}"     target="_blank" rel="noopener">${icon('dblp')}<span>DBLP</span></a>`,
       p.cv       && `<a href="${esc(p.cv)}"        target="_blank" rel="noopener">${icon('cv')}<span>CV</span></a>`,
     ].filter(Boolean).join('');
