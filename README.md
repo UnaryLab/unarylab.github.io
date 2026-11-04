@@ -48,6 +48,7 @@ Edit directly. Fields: `name`, `phonetic`, `bio`, `email`, `scholar`, `github`, 
 | Award1 / Award2 / Award3 | award text (optional) |
 | Software | name of software (must match `file/software/<name>.pdf`) |
 | Description | shown on Software page if Software field is set |
+| Metric | optional venue stat shown after the venue, e.g. `acceptance rate: 19.1%` or `impact factor: 6.6` |
 
 **Paper files** go in `file/publication/` named `<prefix>-paper.pdf`, `-slide.pdf`, `-slide.pptx`, `-poster.pdf` (uppercase extensions also accepted).
 

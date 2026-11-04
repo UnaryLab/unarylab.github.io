@@ -262,6 +262,7 @@ nav {
 
 .pub-title { font-weight: 700; font-size: 15px; color: #111; margin-bottom: 3px; line-height: 1.45; }
 .pub-venue { font-size: 15px; color: #444; margin-bottom: 2px; }
+.pub-metric { color: #8b5a2b; }
 .pub-authors { font-size: 15px; color: #666; margin-bottom: 6px; }
 
 /* bracket-style links: [paper] [code] */

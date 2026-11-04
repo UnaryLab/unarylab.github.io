@@ -298,7 +298,7 @@ function renderPubItem(p) {
     <li class="pub-item">
       <div class="pub-info">
         <div class="pub-title">${gem}${esc(p.title)}</div>
-        <div class="pub-venue"><em>${esc(p.venue)}</em>${dateDisplay ? `, ${dateDisplay}` : ''}</div>
+        <div class="pub-venue"><em>${esc(p.venue)}</em>${dateDisplay ? `, ${dateDisplay}` : ''}${p.metric ? ` <span class="pub-metric">[${esc(p.metric)}]</span>` : ''}</div>
         <div class="pub-authors">${esc(p.author)}</div>
         ${linkParts ? `<div class="pub-links">${linkParts}</div>` : ''}
         ${awards}
